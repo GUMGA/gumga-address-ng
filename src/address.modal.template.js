@@ -35,20 +35,27 @@ export default `
       </div>
     </div>
     <div class="row">
-      <div class="col-sm-12">
-        <table ng-show="ceps" class="table table-striped">
+      <div class="col-sm-12" style="max-height: 200px;overflow: auto;">
+        <label ng-if="lookingZipCode">
+          <i class="glyphicon glyphicon-refresh"></i>
+          Buscando, aguarde um momento...
+        </label>
+        <label ng-if="ceps.length == 0 && !lookingZipCode">
+          Nada encontrado com base na sua pesquisa.
+        </label>
+        <table ng-show="ceps.length > 0 && !lookingZipCode" class="table table-striped">
             <tr>
               <th>Bairro</th>
               <th>Logradouro</th>
               <th>Cep</th>
               <th></th>
             </tr>
-            <tr ng-repeat="cep in ceps">
+            <tr ng-repeat="cep in ceps | limitTo:20">
               <td>{{cep.bairro}}</td>
               <td>{{cep.logradouro}}</td>
               <td>{{cep.cep}}</td>
               <td>
-                <button class="gmd btn btn-primary" ng-click="select(cep.cep)">Selecionar</button>
+                <button class="gmd btn btn-primary" ng-click="select(cep)">Selecionar</button>
               </td>
             </tr>
         </table>

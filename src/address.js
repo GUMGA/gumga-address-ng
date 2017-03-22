@@ -1,9 +1,10 @@
 require('./address.service.js')
 import templateModal from './address.modal.template.js'
+import GumgaAddressModalController from './address.modal.controller.js'
 
 'use strict';
-AddressDirective.$inject = ['GumgaAddressService', '$http', '$compile', '$uibModal'];
-function AddressDirective(GumgaAddressService, $http, $compile, $uibModal) {
+AddressDirective.$inject = ['GumgaAddressService', '$http', '$compile', '$uibModal', '$timeout'];
+function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $timeout) {
   var templateBegin =
     '<div class="row">' +
     ' <div class="col-md-12 col-sm-12 col-xs-12">' +
@@ -23,10 +24,12 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal) {
     '   <label for="input{{::id}}">CEP</label>' +
     '   <a data-ng-click="openModal()" style="cursor: pointer;margin: 0;float: right;" class="text text-primary">Não sabe?</a> ' +
     '	  <div class="input-group" style="width: 100%;">' +
-    '		<input type="text" class="form-control" gumga-mask="99999-999" ng-model="value.zipCode" maxlength="8" id="input{{::id}}" ng-keypress="custom($event,value.zipCode)">' +
+    '		<input type="text" ng-keyup="notfound=false" class="form-control" gumga-mask="99999-999" ng-model="value.zipCode" maxlength="8" id="input{{::id}}" ng-keypress="custom($event,value.zipCode)">' +
     '		<span class="input-group-btn">' +
-    '	      <button class="btn btn-primary" type="button" ng-click="searchCep(value.zipCode)" ng-disabled="loader{{::id}}" id="buttonSearch{{::id}}"><i class="glyphicon glyphicon-search"></i></button>' +
+    '	      <button ng-if="!notfound" class="btn btn-primary" type="button" ng-click="searchCep(value.zipCode)" ng-disabled="loader{{::id}}" id="buttonSearch{{::id}}"><i class="glyphicon glyphicon-search"></i></button>' +
+    '	      <button ng-if="notfound" uib-popover="Cep não encontrado!" popover-trigger="\'mouseenter\'" class="btn btn-danger" type="button"><i class="glyphicon glyphicon-info-sign"></i></button>' +
     '		</span>' +
+    '   ' +
     '	  </div>' +
     '	</div>' +
     ' </div>' +
@@ -231,33 +234,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal) {
       scope.openModal = () => {
         var modal = $uibModal.open({
            template: templateModal,
-           controller: ['$scope', 'factoryData', 'GumgaAddressService', '$uibModalInstance', (scopeModal, factoryData, GumgaAddressService, $uibModalInstance) => {
-              scopeModal.value = {};
-              scopeModal.factoryData = angular.copy(factoryData);
-              scopeModal.getCitiesByUF = function(uf){
-                delete scopeModal.value.localization;
-                delete scopeModal.value.premisse;
-                delete scopeModal.ceps;
-                GumgaAddressService.getLocations(uf).then(resp=>{
-                  scopeModal.cities = resp.data;
-                })
-              }
-              scopeModal.getPremisseByUFAndCity = function(uf, city){
-                  delete scopeModal.value.premisse;
-                  delete scopeModal.ceps;
-                  GumgaAddressService.getPremisseByUFAndCity(uf, city).then(resp=>{
-                    scopeModal.premisses = resp.data;
-                  })
-              }
-              scopeModal.searchCep = function(uf, city, premisse){
-                  GumgaAddressService.searchCepByUfAndCityAndPremisse(uf, city, premisse).then(resp=>{
-                    scopeModal.ceps = resp.data;
-                  })
-              }
-              scopeModal.select = function(cep){
-                $uibModalInstance.close(cep);
-              }
-           }],
+           controller: GumgaAddressModalController,
            size: 'lg',
            resolve: {
              factoryData: scope.factoryData
@@ -266,8 +243,9 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal) {
 
          modal.result.then(function (cep) {
           if(cep){
-            scope.value.zipCode = cep;
-            scope.searchCep(cep);
+            scope.searchCep(cep.cep);
+            scope.value.zipCode = cep.cep;
+            scope.value.codigo_ibge = cep.codigoIbgeCidade;
           }
         });
       }
@@ -309,6 +287,12 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal) {
               scope.value.longitude = response.data.longitude;
               scope.value.formalCode = response.data.ibge_cod_cidade;
               scope.value.country = 'Brasil';
+            }else{
+              scope.notfound = true;
+              document.getElementById('input'+scope.id).focus();
+              $timeout(()=>{
+                document.getElementById('input'+scope.id).select();
+              }, 10)
             }
           },
           error => eventHandler.searchCepError({ $value: data })
