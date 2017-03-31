@@ -1,8 +1,10 @@
 require('./address.service.js')
+import templateModal from './address.modal.template.js'
+import GumgaAddressModalController from './address.modal.controller.js'
 
 'use strict';
-AddressDirective.$inject = ['GumgaAddressService', '$http', '$compile'];
-function AddressDirective(GumgaAddressService, $http, $compile) {
+AddressDirective.$inject = ['GumgaAddressService', '$http', '$compile', '$uibModal', '$timeout'];
+function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $timeout) {
   var templateBegin =
     '<div class="row">' +
     ' <div class="col-md-12 col-sm-12 col-xs-12">' +
@@ -19,12 +21,15 @@ function AddressDirective(GumgaAddressService, $http, $compile) {
     '	</div>' +
     ' <div class="col-md-4">' +
     '	<div class="form-group">' +
-    '     <label for="input{{::id}}">CEP</label>' +
-    '	  <div class="input-group">' +
-    '		<input type="text" class="form-control" ng-model="value.zipCode" maxlength="8" id="input{{::id}}" ng-keypress="custom($event,value.zipCode)">' +
+    '   <label for="input{{::id}}">CEP</label>' +
+    '   <a data-ng-click="openModal()" style="cursor: pointer;margin: 0;float: right;" class="text text-primary">Não sabe?</a> ' +
+    '	  <div class="input-group" style="width: 100%;">' +
+    '		<input type="text" ng-keyup="notfound=false" class="form-control" gumga-mask="99999-999" ng-model="value.zipCode" maxlength="8" id="input{{::id}}" ng-keypress="custom($event,value.zipCode)">' +
     '		<span class="input-group-btn">' +
-    '	      <button class="btn btn-primary" type="button" ng-click="searchCep(value.zipCode)" ng-disabled="loader{{::id}}" id="buttonSearch{{::id}}"><i class="glyphicon glyphicon-search"></i></button>' +
+    '	      <button ng-if="!notfound" class="btn btn-primary" type="button" ng-click="searchCep(value.zipCode)" ng-disabled="loader{{::id}}" id="buttonSearch{{::id}}"><i class="glyphicon glyphicon-search"></i></button>' +
+    '	      <button ng-if="notfound" uib-popover="Cep não encontrado!" popover-trigger="\'mouseenter\'" class="btn btn-danger" type="button"><i class="glyphicon glyphicon-info-sign"></i></button>' +
     '		</span>' +
+    '   ' +
     '	  </div>' +
     '	</div>' +
     ' </div>' +
@@ -33,8 +38,7 @@ function AddressDirective(GumgaAddressService, $http, $compile) {
   var streetType =
     '<div class="form-group">' +
     ' <label for="tipoLogradouro">Tipo Logradouro</label>' +
-    ' <input type="text" ng-model="value.premisseType" uib-typeahead="type for type in streetTypes | filter:$viewValue | limitTo:8" typeahead-editable="false" typeahead-show-hint="true" typeahead-min-length="0" class="form-control" typeahead-editable="false" typeahead-show-hint="true" typeahead-min-length="0">' +
-    // ' <select type="text" ng-model="value.premisseType" class="form-control" ng-options="log for log in factoryData.logs"></select>' +
+    ' <input type="text" ng-model="value.premisseType" typeahead-min-length="0" uib-typeahead="type for type in streetTypes | filter:$viewValue | limitTo:8" typeahead-editable="false" typeahead-show-hint="true" typeahead-min-length="0" class="form-control" typeahead-editable="false" typeahead-show-hint="true" typeahead-min-length="0">' +
     '</div>'
     ;
   var street =
@@ -162,6 +166,9 @@ function AddressDirective(GumgaAddressService, $http, $compile) {
     },
     //template: template.join('\n'),
     link: function (scope, elm, attrs, ctrl) {
+      scope.cities = [];
+
+
       function isEmpty(obj) {
         for (var key in obj) if (obj.hasOwnProperty(key)) {
           return false;
@@ -223,9 +230,30 @@ function AddressDirective(GumgaAddressService, $http, $compile) {
         searchCepSuccess: (attrs.onSearchCepSuccess ? scope.onSearchCepSuccess : angular.noop),
         searchCepError: (attrs.onSearchCepError ? scope.onSearchCepError : angular.noop)
       };
+
+      scope.openModal = () => {
+        var modal = $uibModal.open({
+           template: templateModal,
+           controller: GumgaAddressModalController,
+           size: 'lg',
+           resolve: {
+             factoryData: scope.factoryData
+           }
+         });
+
+         modal.result.then(function (cep) {
+          if(cep){
+            scope.searchCep(cep.cep);
+            scope.value.zipCode = cep.cep;
+            scope.value.codigo_ibge = cep.codigoIbgeCidade;
+          }
+        });
+      }
+
       scope.custom = function ($event, cep) {
         $event.charCode == 13 ? scope.searchCep(cep) : angular.noop;
       };
+
       scope.openMaps = function (value) {
         if (!value.number) {
           value.number = '';
@@ -233,16 +261,18 @@ function AddressDirective(GumgaAddressService, $http, $compile) {
         var maps = 'https://www.google.com.br/maps/place/' + value.premisseType + ' ' + value.premisse + ',' + value.number + ',' + value.localization;
         window.open(maps);
       };
+
       scope.returnLink = function (value) {
         if (!value.number) {
           value.number = '';
         }
         return 'https://www.google.com.br/maps/place/' + value.premisseType + ' ' + value.premisse + ',' + value.number + ',' + value.localization;
       };
+
       scope.searchCep = function (cep) {
         scope['loader' + scope.id] = true;
         eventHandler.searchCepStart();
-        $http.get('http://www.gumga.com.br/services-api/public/cep/' + cep)
+        GumgaAddressService.getCep(cep)
           .then(
           response => {
             eventHandler.searchCepSuccess({ $value: response.data });
@@ -257,11 +287,18 @@ function AddressDirective(GumgaAddressService, $http, $compile) {
               scope.value.longitude = response.data.longitude;
               scope.value.formalCode = response.data.ibge_cod_cidade;
               scope.value.country = 'Brasil';
+            }else{
+              scope.notfound = true;
+              document.getElementById('input'+scope.id).focus();
+              $timeout(()=>{
+                document.getElementById('input'+scope.id).select();
+              }, 10)
             }
           },
           error => eventHandler.searchCepError({ $value: data })
           )
       };
+
       if (scope.value.zipCode) {
         scope.searchCep(scope.value.zipCode);
       }
