@@ -15,7 +15,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
     '<div class="row">' +
     ' <div class="col-md-8">' +
     '	<div class="form-group">' +
-    '     <label for="País">País</label>' +
+    '   <label for="País">País</label>' +
     '	  <select ng-readonly="true" ng-model="value.country" class="form-control" ng-options="pais for pais in factoryData.availableCountries"></select>' +
     '	</div>' +
     '	</div>' +
@@ -24,10 +24,10 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
     '   <label for="input{{::id}}">CEP</label>' +
     '   <a data-ng-click="openModal()" style="cursor: pointer;margin: 0;float: right;" class="text text-primary">Não sabe?</a> ' +
     '	  <div class="input-group" style="width: 100%;">' +
-    '		<input type="text" ng-keyup="notfound=false" class="form-control" gumga-mask="99999-999" ng-model="value.zipCode" maxlength="8" id="input{{::id}}" ng-keypress="custom($event,value.zipCode)">' +
+    '		<input type="text" ng-keyup="notfound=false" class="form-control" gumga-mask="99999-999" ng-model="value.zipCode" id="input{{::id}}" ng-keypress="custom($event,value.zipCode)">' +
     '		<span class="input-group-btn">' +
-    '	      <button ng-if="!notfound" class="btn btn-primary" type="button" ng-click="searchCep(value.zipCode)" ng-disabled="loader{{::id}}" id="buttonSearch{{::id}}"><i class="glyphicon glyphicon-search"></i></button>' +
-    '	      <button ng-if="notfound" uib-popover="Cep não encontrado!" popover-trigger="\'mouseenter\'" class="btn btn-danger" type="button"><i class="glyphicon glyphicon-info-sign"></i></button>' +
+    '	    <button ng-show="!notfound" class="btn btn-primary" type="button" ng-click="searchCep(value.zipCode)" ng-disabled="loader{{::id}}" id="buttonSearch{{::id}}"><i class="glyphicon glyphicon-search"></i></button>' +
+    '	    <button ng-show="notfound" uib-popover="Cep não encontrado!" popover-trigger="\'mouseenter\'" class="btn btn-danger" type="button"><i class="glyphicon glyphicon-info-sign"></i></button>' +
     '		</span>' +
     '   ' +
     '	  </div>' +
@@ -242,7 +242,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
          });
 
          modal.result.then(function (cep) {
-          if(cep){
+          if (cep){
             scope.searchCep(cep.cep);
             scope.value.zipCode = cep.cep;
             scope.value.codigo_ibge = cep.codigoIbgeCidade;
@@ -251,7 +251,9 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
       }
 
       scope.custom = function ($event, cep) {
-        $event.charCode == 13 ? scope.searchCep(cep) : angular.noop;
+        if (cep && $event.charCode == 13) {
+          scope.searchCep(cep)
+        }
       };
 
       scope.openMaps = function (value) {
@@ -273,8 +275,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
         scope['loader' + scope.id] = true;
         eventHandler.searchCepStart();
         GumgaAddressService.getCep(cep)
-          .then(
-          response => {
+          .then(response => {
             eventHandler.searchCepSuccess({ $value: response.data });
             scope['loader' + scope.id] = false;
             if (parseInt(response.data.resultado) == 1) {
@@ -287,16 +288,14 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
               scope.value.longitude = response.data.longitude;
               scope.value.formalCode = response.data.ibge_cod_cidade;
               scope.value.country = 'Brasil';
-            }else{
+            } else {
               scope.notfound = true;
               document.getElementById('input'+scope.id).focus();
               $timeout(()=>{
                 document.getElementById('input'+scope.id).select();
               }, 10)
             }
-          },
-          error => eventHandler.searchCepError({ $value: data })
-          )
+          }, error => eventHandler.searchCepError({ $value: data }))
       };
 
       if (scope.value.zipCode) {
