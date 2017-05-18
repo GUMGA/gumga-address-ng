@@ -1,4 +1,4 @@
-const GumgaAddressModalController = ($scope, factoryData, GumgaAddressService, $uibModalInstance) => {
+const GumgaAddressModalController = ($scope, factoryData, GumgaAddressService, $uibModalInstance, apiSearchCep) => {
 
     $scope.value = {};
     $scope.factoryData = angular.copy(factoryData);
@@ -7,7 +7,7 @@ const GumgaAddressModalController = ($scope, factoryData, GumgaAddressService, $
       delete $scope.value.localization;
       delete $scope.value.premisse;
       delete $scope.ceps;
-      GumgaAddressService.getLocations(uf).then(resp=>{
+      GumgaAddressService.getLocations(uf, apiSearchCep).then(resp=>{
         $scope.cities = resp.data;
       })
     }
@@ -15,7 +15,7 @@ const GumgaAddressModalController = ($scope, factoryData, GumgaAddressService, $
     $scope.getPremisseByUFAndCity = function(uf, city){
         delete $scope.value.premisse;
         delete $scope.ceps;
-        GumgaAddressService.getPremisseByUFAndCity(uf, city).then(resp=>{
+        GumgaAddressService.getPremisseByUFAndCity(uf, city, apiSearchCep).then(resp=>{
           $scope.premisses = resp.data;
         })
     }
@@ -25,7 +25,7 @@ const GumgaAddressModalController = ($scope, factoryData, GumgaAddressService, $
         if(!city) return;
         if(!uf) return;
         $scope.lookingZipCode = true;
-        GumgaAddressService.searchCepByUfAndCityAndPremisse(uf, city, premisse).then(resp=>{
+        GumgaAddressService.searchCepByUfAndCityAndPremisse(uf, city, premisse, apiSearchCep).then(resp=>{
           $scope.ceps = resp.data;
           $scope.lookingZipCode = false;
         })
@@ -37,6 +37,6 @@ const GumgaAddressModalController = ($scope, factoryData, GumgaAddressService, $
 
 }
 
-GumgaAddressModalController.$inject = ['$scope', 'factoryData', 'GumgaAddressService', '$uibModalInstance'];
+GumgaAddressModalController.$inject = ['$scope', 'factoryData', 'GumgaAddressService', '$uibModalInstance', 'apiSearchCep'];
 
 export default GumgaAddressModalController;

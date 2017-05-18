@@ -162,7 +162,8 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
       value: '=',
       onSearchCepStart: '&?',
       onSearchCepSuccess: '&?',
-      onSearchCepError: '&?'
+      onSearchCepError: '&?',
+      apiSearchCep: '@?'
     },
     //template: template.join('\n'),
     link: function (scope, elm, attrs, ctrl) {
@@ -237,7 +238,8 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
            controller: GumgaAddressModalController,
            size: 'lg',
            resolve: {
-             factoryData: scope.factoryData
+             factoryData: scope.factoryData,
+             apiSearchCep : scope.apiSearchCep
            }
          });
 
@@ -274,7 +276,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
       scope.searchCep = function (cep) {
         scope['loader' + scope.id] = true;
         eventHandler.searchCepStart();
-        GumgaAddressService.getCep(cep)
+        GumgaAddressService.getCep(cep, scope.apiSearchCep)
           .then(response => {
             eventHandler.searchCepSuccess({ $value: response.data });
             scope['loader' + scope.id] = false;

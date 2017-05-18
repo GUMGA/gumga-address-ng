@@ -40,7 +40,8 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
       value: '=',
       onSearchCepStart: '&?',
       onSearchCepSuccess: '&?',
-      onSearchCepError: '&?'
+      onSearchCepError: '&?',
+      apiSearchCep: '@?'
     },
     //template: template.join('\n'),
     link: function link(scope, elm, attrs, ctrl) {
@@ -114,7 +115,8 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
           controller: _addressModalController2.default,
           size: 'lg',
           resolve: {
-            factoryData: scope.factoryData
+            factoryData: scope.factoryData,
+            apiSearchCep: scope.apiSearchCep
           }
         });
 
@@ -151,7 +153,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
       scope.searchCep = function (cep) {
         scope['loader' + scope.id] = true;
         eventHandler.searchCepStart();
-        GumgaAddressService.getCep(cep).then(function (response) {
+        GumgaAddressService.getCep(cep, scope.apiSearchCep).then(function (response) {
           eventHandler.searchCepSuccess({ $value: response.data });
           scope['loader' + scope.id] = false;
           if (parseInt(response.data.resultado) == 1) {
@@ -190,7 +192,7 @@ angular.module('gumga.address', ['gumga.address.services']).directive('gumgaAddr
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var GumgaAddressModalController = function GumgaAddressModalController($scope, factoryData, GumgaAddressService, $uibModalInstance) {
+var GumgaAddressModalController = function GumgaAddressModalController($scope, factoryData, GumgaAddressService, $uibModalInstance, apiSearchCep) {
 
   $scope.value = {};
   $scope.factoryData = angular.copy(factoryData);
@@ -199,7 +201,7 @@ var GumgaAddressModalController = function GumgaAddressModalController($scope, f
     delete $scope.value.localization;
     delete $scope.value.premisse;
     delete $scope.ceps;
-    GumgaAddressService.getLocations(uf).then(function (resp) {
+    GumgaAddressService.getLocations(uf, apiSearchCep).then(function (resp) {
       $scope.cities = resp.data;
     });
   };
@@ -207,7 +209,7 @@ var GumgaAddressModalController = function GumgaAddressModalController($scope, f
   $scope.getPremisseByUFAndCity = function (uf, city) {
     delete $scope.value.premisse;
     delete $scope.ceps;
-    GumgaAddressService.getPremisseByUFAndCity(uf, city).then(function (resp) {
+    GumgaAddressService.getPremisseByUFAndCity(uf, city, apiSearchCep).then(function (resp) {
       $scope.premisses = resp.data;
     });
   };
@@ -217,7 +219,7 @@ var GumgaAddressModalController = function GumgaAddressModalController($scope, f
     if (!city) return;
     if (!uf) return;
     $scope.lookingZipCode = true;
-    GumgaAddressService.searchCepByUfAndCityAndPremisse(uf, city, premisse).then(function (resp) {
+    GumgaAddressService.searchCepByUfAndCityAndPremisse(uf, city, premisse, apiSearchCep).then(function (resp) {
       $scope.ceps = resp.data;
       $scope.lookingZipCode = false;
     });
@@ -228,7 +230,7 @@ var GumgaAddressModalController = function GumgaAddressModalController($scope, f
   };
 };
 
-GumgaAddressModalController.$inject = ['$scope', 'factoryData', 'GumgaAddressService', '$uibModalInstance'];
+GumgaAddressModalController.$inject = ['$scope', 'factoryData', 'GumgaAddressService', '$uibModalInstance', 'apiSearchCep'];
 
 exports.default = GumgaAddressModalController;
 
@@ -249,7 +251,7 @@ exports.default = "\n\n<div class=\"modal-header\">\n    <h3 class=\"modal-title
   AddressService.$inject = ['$http'];
   function AddressService($http) {
 
-    var base = 'http://gumga.com.br/services-api/';
+    var base = 'http://45.33.100.20/services-api';
 
     return {
       everyUf: ['AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT', 'PA', 'PB', 'PE', 'PI', 'PR', 'RJ', 'RN', 'RR', 'RS', 'SC', 'SE', 'SP', 'TO'],
@@ -268,19 +270,23 @@ exports.default = "\n\n<div class=\"modal-header\">\n    <h3 class=\"modal-title
           country: null
         };
       },
-      getLocations: function getLocations(uf) {
-        return $http.get(base + '/public/buscar-cidades?uf=' + uf);
+      getLocations: function getLocations(uf, apiSearchCep) {
+        return $http.get(getApiSearchCep(apiSearchCep) + '/public/buscar-cidades?uf=' + uf);
       },
-      getPremisseByUFAndCity: function getPremisseByUFAndCity(uf, city) {
-        return $http.get(base + '/public/buscar-logradouros?uf=' + uf + '&cidade=' + city);
+      getPremisseByUFAndCity: function getPremisseByUFAndCity(uf, city, apiSearchCep) {
+        return $http.get(getApiSearchCep(apiSearchCep) + '/public/buscar-logradouros?uf=' + uf + '&cidade=' + city);
       },
-      searchCepByUfAndCityAndPremisse: function searchCepByUfAndCityAndPremisse(uf, city, premisse) {
-        return $http.get(base + '/public/buscar-endereco-completo?uf=' + uf + '&cidade=' + city + '&logradouro=' + premisse);
+      searchCepByUfAndCityAndPremisse: function searchCepByUfAndCityAndPremisse(uf, city, premisse, apiSearchCep) {
+        return $http.get(getApiSearchCep(apiSearchCep) + '/public/buscar-endereco-completo?uf=' + uf + '&cidade=' + city + '&logradouro=' + premisse);
       },
-      getCep: function getCep(cep) {
-        return $http.get(base + '/public/cep/' + cep);
+      getCep: function getCep(cep, apiSearchCep) {
+        return $http.get(getApiSearchCep(apiSearchCep) + '/public/cep/' + cep);
       }
     };
+
+    function getApiSearchCep(apiSearchCep) {
+      return apiSearchCep || base;
+    }
   }
   angular.module('gumga.address.services', []).factory('GumgaAddressService', AddressService);
 })();

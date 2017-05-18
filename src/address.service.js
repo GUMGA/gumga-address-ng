@@ -3,7 +3,7 @@
   AddressService.$inject = ['$http'];
   function AddressService($http) {
 
-    var base = 'http://gumga.com.br/services-api/'
+    var base = 'http://45.33.100.20/services-api'
 
     return {
       everyUf: ['AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT', 'PA', 'PB', 'PE', 'PI', 'PR',
@@ -26,21 +26,23 @@
           country: null
         }
       },
-      getLocations: function(uf){
-        return $http.get(base+'/public/buscar-cidades?uf='+uf);
+      getLocations: function(uf, apiSearchCep){
+        return $http.get(getApiSearchCep(apiSearchCep) + '/public/buscar-cidades?uf='+uf);
       },
-      getPremisseByUFAndCity: function(uf, city){
-        return $http.get(base+'/public/buscar-logradouros?uf='+uf+'&cidade='+city);
+      getPremisseByUFAndCity: function(uf, city, apiSearchCep){
+        return $http.get(getApiSearchCep(apiSearchCep) + '/public/buscar-logradouros?uf='+uf+'&cidade='+city);
       },
-      searchCepByUfAndCityAndPremisse: function(uf, city, premisse){
-        return $http.get(base+'/public/buscar-endereco-completo?uf='+uf+'&cidade='+city+'&logradouro='+premisse);
+      searchCepByUfAndCityAndPremisse: function(uf, city, premisse, apiSearchCep){
+        return $http.get(getApiSearchCep(apiSearchCep) + '/public/buscar-endereco-completo?uf='+uf+'&cidade='+city+'&logradouro='+premisse);
       },
-      getCep: function(cep){
-        return $http.get(base+'/public/cep/' + cep)
+      getCep: function(cep, apiSearchCep){
+        return $http.get(getApiSearchCep(apiSearchCep) + '/public/cep/' + cep)
       }
     }
 
-
+    function getApiSearchCep(apiSearchCep) {
+      return apiSearchCep || base
+    }
 
   }
   angular.module('gumga.address.services', [])
