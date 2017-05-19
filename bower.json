@@ -2,7 +2,7 @@
   "name": "gumga-address-ng",
   "description": "Gumga Address",
   "main": "./src/address.js",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "authors": [
     "Gumga Tecnologia da Informação S/A"
   ],

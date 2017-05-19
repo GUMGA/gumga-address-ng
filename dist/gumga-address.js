@@ -280,7 +280,7 @@ exports.default = "\n\n<div class=\"modal-header\">\n    <h3 class=\"modal-title
         return $http.get(getApiSearchCep(apiSearchCep) + '/public/buscar-endereco-completo?uf=' + uf + '&cidade=' + city + '&logradouro=' + premisse);
       },
       getCep: function getCep(cep, apiSearchCep) {
-        return $http.get(getApiSearchCep(apiSearchCep) + '/public/cep/' + cep);
+        return $http.get(getApiSearchCep(apiSearchCep) + '/public/busca-cep/' + cep);
       }
     };
 

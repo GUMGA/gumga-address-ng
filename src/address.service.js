@@ -36,7 +36,7 @@
         return $http.get(getApiSearchCep(apiSearchCep) + '/public/buscar-endereco-completo?uf='+uf+'&cidade='+city+'&logradouro='+premisse);
       },
       getCep: function(cep, apiSearchCep){
-        return $http.get(getApiSearchCep(apiSearchCep) + '/public/cep/' + cep)
+        return $http.get(getApiSearchCep(apiSearchCep) + '/public/busca-cep/' + cep)
       }
     }
 
