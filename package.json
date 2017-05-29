@@ -1,6 +1,6 @@
 {
   "name": "gumga-address-ng",
-  "version": "1.0.6",
+  "version": "1.1.0",
   "description": "Gumga Address",
   "main": "./src/address.js",
   "directories": {

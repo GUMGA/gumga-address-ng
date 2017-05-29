@@ -20,18 +20,21 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
   var templateBegin = '<div class="row">' + ' <div class="col-md-12 col-sm-12 col-xs-12">' + '   <accordion>' + '	  <accordion-group is-open="false" heading="{{::title}}">';
   var blockCountryCep = '<div class="row">' + ' <div class="col-md-8">' + '	<div class="form-group">' + '   <label for="País">País</label>' + '	  <select ng-readonly="true" ng-model="value.country" class="form-control" ng-options="pais for pais in factoryData.availableCountries"></select>' + '	</div>' + '	</div>' + ' <div class="col-md-4">' + '	<div class="form-group">' + '   <label for="input{{::id}}">CEP</label>' + '   <a data-ng-click="openModal()" style="cursor: pointer;margin: 0;float: right;" class="text text-primary">Não sabe?</a> ' + '	  <div class="input-group" style="width: 100%;">' + '		<input type="text" ng-keyup="notfound=false" class="form-control" gumga-mask="99999-999" ng-model="value.zipCode" id="input{{::id}}" ng-keypress="custom($event,value.zipCode)">' + '		<span class="input-group-btn">' + '	    <button ng-show="!notfound" class="btn btn-primary" type="button" ng-click="searchCep(value.zipCode)" ng-disabled="loader{{::id}}" id="buttonSearch{{::id}}"><i class="glyphicon glyphicon-search"></i></button>' + '	    <button ng-show="notfound" uib-popover="Cep não encontrado!" popover-trigger="\'mouseenter\'" class="btn btn-danger" type="button"><i class="glyphicon glyphicon-info-sign"></i></button>' + '		</span>' + '   ' + '	  </div>' + '	</div>' + ' </div>' + '</div>';
   var streetType = '<div class="form-group">' + ' <label for="tipoLogradouro">Tipo Logradouro</label>' + ' <input type="text" ng-model="value.premisseType" typeahead-min-length="0" uib-typeahead="type for type in streetTypes | filter:$viewValue | limitTo:8" typeahead-editable="false" typeahead-show-hint="true" typeahead-min-length="0" class="form-control" typeahead-editable="false" typeahead-show-hint="true" typeahead-min-length="0">' + '</div>';
-  var street = '<div class="form-group">' + ' <label for="Logradouro">Logradouro</label>' + ' <input type="text" ng-model="value.premisse" class="form-control id="oi"/>' + '</div>';
+  var street = '<div class="form-group">' + ' <label for="Logradouro">Logradouro</label>' + ' <input type="text" ng-model="value.premisse" class="form-control"/>' + '</div>';
   var number = '<div class="form-group">' + '		<label for="Número">Número</label>' + '		<input type="text" ng-model="value.number" class="form-control" id="numberInput{{::id}}"/>' + '</div>';
   var blockStreet = '<div class="row">' + '		<div class="col-md-4">' + streetType + '		</div>' + '		<div class="col-md-8">' + street + '		</div>' + '</div>';
   var blockStreetNumber = '<div class="row">' + '		<div class="col-md-4">' + streetType + '		</div>' + '		<div class="col-md-5">' + street + '		</div>' + '		<div class="col-md-3">' + number + '		</div>' + '</div>';
   var blockComplement = '<div class="row">' + '		<div class="col-md-12">' + '				<div class="form-group">' + '						<label for="Complemento">Complemento</label>' + '						<input type="text" ng-model="value.information" class="form-control"/>' + '				</div>' + '		</div>' + '</div>';
   var blockNeighbourhood = '<div class="row">' + '		<div class="col-md-12">' + '				<div class="form-group">' + '						<label for="Bairro">Bairro</label>' + '						<input type="text" ng-model="value.neighbourhood" class="form-control"/>' + '				</div>' + '		</div>' + '</div>';
   var state = '<div class="form-group">' + '   <label for="UF">UF</label>' + '		<select ng-model="value.state" class="form-control" ng-options="uf for uf in factoryData.ufs"></select>' + '</div>';
+
+  var stateCode = '				<div class="form-group">' + '						<label for="Bairro">Cód. UF</label>' + '						<input type="text" ng-model="value.stateCode" class="form-control"/>' + '				</div>';
+
   var city = '<div class="form-group">' + '		<label for="Localidade">Localidade</label>' + '		<input type="text" ng-model="value.localization" class="form-control"/>' + '</div>';
-  var codIBGE = '<div class="form-group">' + '		<label for="CodIBGE{{::id}}">Código</label>' + '		<input type="text" ng-model="value.codigo_ibge" class="form-control" id="CodIBGE{{::id}}"/>' + '</div>';
-  var blockStateCity = '<div class="row">' + '		<div class="col-md-4">' + state + '		</div>' + '		<div class="col-md-8">' + city + '		</div>' + '</div>';
-  var blockStateCityIBGE = '<div class="row">' + '		<div class="col-md-4">' + state + '		</div>' + '		<div class="col-md-4">' + city + '		</div>' + '		<div class="col-md-4">' + codIBGE + '		</div>' + '</div>';
-  var blockLatLng = '<div class="row">' + '		<div class="col-md-6">' + '       <div class="form-group">' + '		        <label for="Latitude{{::id}}">Latitude</label>' + '		        <input type="text" ng-model="value.lat" class="form-control" id="Latitude{{::id}}"/>' + '       </div>' + '		</div>' + '		<div class="col-md-6">' + '       <div class="form-group">' + '		        <label for="Longitude{{::id}}">Longitude</label>' + '		        <input type="text" ng-model="value.lng" class="form-control" id="Longitude{{::id}}"/>' + '       </div>' + '		</div>' + '</div>';
+  var codIBGE = '<div class="form-group">' + '		<label for="CodIBGE{{::id}}">Cód. IBGE</label>' + '		<input type="text" ng-model="value.formalCode" class="form-control" id="CodIBGE{{::id}}"/>' + '</div>';
+  var blockStateCity = '<div class="row">' + '		<div class="{{withStateCode ? \'col-md-2\' : \'col-md-4\'}}">' + state + '		</div>' + '		<div class="col-md-2" ng-show="withStateCode">' + stateCode + '		</div>' + '		<div class="col-md-8">' + city + '		</div>' + '</div>';
+  var blockStateCityIBGE = '<div class="row">' + '		<div class="{{withStateCode ? \'col-md-2\' : \'col-md-4\'}}">' + state + '		</div>' + '		<div class="col-md-2" ng-show="withStateCode">' + stateCode + '		</div>' + '		<div class="col-md-4">' + city + '		</div>' + '		<div class="col-md-4">' + codIBGE + '		</div>' + '</div>';
+  var blockLatLng = '<div class="row">' + '		<div class="col-md-6">' + '       <div class="form-group">' + '		        <label for="Latitude{{::id}}">Latitude</label>' + '		        <input type="text" ng-model="value.latitude" class="form-control" id="Latitude{{::id}}"/>' + '       </div>' + '		</div>' + '		<div class="col-md-6">' + '       <div class="form-group">' + '		        <label for="Longitude{{::id}}">Longitude</label>' + '		        <input type="text" ng-model="value.longitude" class="form-control" id="Longitude{{::id}}"/>' + '       </div>' + '		</div>' + '</div>';
   var blockMaps = '<div class="row">' + '		<div class="col-md-12">' + '				<button type="button" class="btn btn-default btn-block" ng-disabled="!value.localization" ng-click="openMaps(value)" target="_blank">Maps <i class="glyphicon glyphicon-globe"></i></button>' + '		</div>' + '</div>';
   var templateEnd = '						</accordion-group>' + '				</accordion>' + '		</div>' + '</div>';
   return {
@@ -46,6 +49,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
     //template: template.join('\n'),
     link: function link(scope, elm, attrs, ctrl) {
       scope.cities = [];
+      console.log(scope.value);
 
       function isEmpty(obj) {
         for (var key in obj) {
@@ -69,6 +73,8 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
       attrs.stateCityIbge = forceAttr2Bool(attrs.stateCityIbge);
       attrs.latLng = forceAttr2Bool(attrs.latLng);
       attrs.maps = forceAttr2Bool(attrs.maps);
+
+      if (attrs.stateCode) scope.withStateCode = forceAttr2Bool(attrs.stateCode);
 
       scope.streetTypes = ['AV', 'AVENIDA', 'RUA', 'ROD.', 'BC', 'TRAVESSA', 'ALAMEDA', 'VIELA', 'CAMINHO', 'ESTRADA', 'PRAÇA', 'PASSAGEM', 'VILA', 'VIADUTO', 'RODOVIA', 'BECO', 'ACESSO', 'LARGO', 'VIA', 'CAMPO', 'MONTE', 'LADEIRA', 'CALÇADA', 'LOTEAMENTO', 'ROTATÓRIA', 'PASSEIO', 'NÚCLEO', 'PARQUE', 'ANTIGA', 'LAGO', 'BOULEVARD', 'ACAMPAMENTO', 'COMPLEXO', 'CONTORNO', 'BALÇO', 'CONJUNTO', 'MORRO', 'CONDOMÍNIO', 'TERMINAL', 'ESCADA', 'FAVELA', 'COLÔNIA', 'RECANTO', 'ALTO', 'ILHA', 'JARDIM', 'PASSARELA', 'PONTE', 'GALERIA', 'VALE', 'VEREDA', 'ENTRADA', 'BULEVAR', 'TRECHO', 'TÚNEL', 'ESTACIONAMENTO', 'QUADRA', 'BOSQUE', 'RETORNO', 'PÁTIO', 'PRAIA', 'RAMAL', 'BAIXA', 'CHÁCARA', 'SÍTIO', 'UNIDADE', 'RESIDENCIAL', 'FEIRA', 'ESTAÇÂO', 'RÓTULA', 'CANAL', 'FAZENDA', 'RETIRO', 'SETOR', 'RAMPA', 'ESPLANADA', 'CAMPUS', 'BLOCO', 'CENTRO', 'MÓDULO', 'ESTÁDIO', 'ESCADARIA', 'AEROPORTO', 'SERVIDÃO', 'FERROVIA', 'TREVO', 'PORTO', 'ATALHO', 'DISTRITO', 'CORREDOR', 'FONTE', 'CÓRREGO', 'CIRCULAR', 'CAIS', 'SUBIDA', 'LAGOA', 'PROLONGAMENTO', 'DESCIDA', 'PARALELA', 'ELEVADA', 'RETA', 'PONTA', 'VALA', 'BURACO', 'MARINA', 'FORTE', 'PARADA', 'LINHA', 'FRANCISCO', 'MARECHAL', 'ROD.', 'CICLOVIA'];
 
@@ -162,9 +168,9 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
             scope.value.localization = response.data.cidade ? response.data.cidade : scope.value.localization;
             scope.value.neighbourhood = response.data.bairro ? response.data.bairro : scope.value.neighbourhood;
             scope.value.state = response.data.uf ? response.data.uf : scope.value.state;
-            scope.value.latitude = response.data.latitude;
-            scope.value.longitude = response.data.longitude;
-            scope.value.formalCode = response.data.ibge_cod_cidade;
+            // scope.value.latitude = response.data.latitude ? response.data.latitude : scope.value.latitude;
+            // scope.value.longitude = response.data.longitude ? response.data.longitude : scope.value.longitude;
+            scope.value.formalCode = response.data.ibge_cod_cidade ? response.data.ibge_cod_cidade : scope.value.formalCode;
             scope.value.country = 'Brasil';
           } else {
             scope.notfound = true;

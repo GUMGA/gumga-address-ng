@@ -44,7 +44,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
   var street =
     '<div class="form-group">' +
     ' <label for="Logradouro">Logradouro</label>' +
-    ' <input type="text" ng-model="value.premisse" class="form-control id="oi"/>' +
+    ' <input type="text" ng-model="value.premisse" class="form-control"/>' +
     '</div>'
     ;
   var number =
@@ -97,6 +97,14 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
     '		<select ng-model="value.state" class="form-control" ng-options="uf for uf in factoryData.ufs"></select>' +
     '</div>'
     ;
+
+  var stateCode =
+    '				<div class="form-group">' +
+    '						<label for="Bairro">Cód. UF</label>' +
+    '						<input type="text" ng-model="value.stateCode" class="form-control"/>' +
+    '				</div>'
+    ;
+
   var city =
     '<div class="form-group">' +
     '		<label for="Localidade">Localidade</label>' +
@@ -105,13 +113,15 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
     ;
   var codIBGE =
     '<div class="form-group">' +
-    '		<label for="CodIBGE{{::id}}">Código</label>' +
-    '		<input type="text" ng-model="value.codigo_ibge" class="form-control" id="CodIBGE{{::id}}"/>' +
+    '		<label for="CodIBGE{{::id}}">Cód. IBGE</label>' +
+    '		<input type="text" ng-model="value.formalCode" class="form-control" id="CodIBGE{{::id}}"/>' +
     '</div>'
     ;
   var blockStateCity =
     '<div class="row">' +
-    '		<div class="col-md-4">' + state +
+    '		<div class="{{withStateCode ? \'col-md-2\' : \'col-md-4\'}}">' + state  +
+    '		</div>' +
+    '		<div class="col-md-2" ng-show="withStateCode">' + stateCode  +
     '		</div>' +
     '		<div class="col-md-8">' + city +
     '		</div>' +
@@ -119,7 +129,9 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
     ;
   var blockStateCityIBGE =
     '<div class="row">' +
-    '		<div class="col-md-4">' + state +
+    '		<div class="{{withStateCode ? \'col-md-2\' : \'col-md-4\'}}">' + state  +
+    '		</div>' +
+    '		<div class="col-md-2" ng-show="withStateCode">' + stateCode  +
     '		</div>' +
     '		<div class="col-md-4">' + city +
     '		</div>' +
@@ -132,13 +144,13 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
     '		<div class="col-md-6">' +
     '       <div class="form-group">' +
     '		        <label for="Latitude{{::id}}">Latitude</label>' +
-    '		        <input type="text" ng-model="value.lat" class="form-control" id="Latitude{{::id}}"/>' +
+    '		        <input type="text" ng-model="value.latitude" class="form-control" id="Latitude{{::id}}"/>' +
     '       </div>' +
     '		</div>' +
     '		<div class="col-md-6">' +
     '       <div class="form-group">' +
     '		        <label for="Longitude{{::id}}">Longitude</label>' +
-    '		        <input type="text" ng-model="value.lng" class="form-control" id="Longitude{{::id}}"/>' +
+    '		        <input type="text" ng-model="value.longitude" class="form-control" id="Longitude{{::id}}"/>' +
     '       </div>' +
     '		</div>' +
     '</div>'
@@ -168,7 +180,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
     //template: template.join('\n'),
     link: function (scope, elm, attrs, ctrl) {
       scope.cities = [];
-
+      console.log(scope.value)
 
       function isEmpty(obj) {
         for (var key in obj) if (obj.hasOwnProperty(key)) {
@@ -191,6 +203,8 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
       attrs.stateCityIbge = forceAttr2Bool(attrs.stateCityIbge);
       attrs.latLng = forceAttr2Bool(attrs.latLng);
       attrs.maps = forceAttr2Bool(attrs.maps);
+
+      if(attrs.stateCode) scope.withStateCode = forceAttr2Bool(attrs.stateCode);
 
       scope.streetTypes = ['AV', 'AVENIDA', 'RUA', 'ROD.', 'BC', 'TRAVESSA', 'ALAMEDA', 'VIELA', 'CAMINHO', 'ESTRADA', 'PRAÇA', 'PASSAGEM', 'VILA', 'VIADUTO', 'RODOVIA', 'BECO', 'ACESSO', 'LARGO', 'VIA', 'CAMPO', 'MONTE', 'LADEIRA', 'CALÇADA', 'LOTEAMENTO', 'ROTATÓRIA', 'PASSEIO', 'NÚCLEO', 'PARQUE', 'ANTIGA', 'LAGO', 'BOULEVARD', 'ACAMPAMENTO', 'COMPLEXO', 'CONTORNO', 'BALÇO', 'CONJUNTO', 'MORRO', 'CONDOMÍNIO', 'TERMINAL', 'ESCADA', 'FAVELA', 'COLÔNIA', 'RECANTO', 'ALTO', 'ILHA', 'JARDIM', 'PASSARELA', 'PONTE', 'GALERIA', 'VALE', 'VEREDA', 'ENTRADA', 'BULEVAR', 'TRECHO', 'TÚNEL', 'ESTACIONAMENTO', 'QUADRA', 'BOSQUE', 'RETORNO', 'PÁTIO', 'PRAIA', 'RAMAL', 'BAIXA', 'CHÁCARA', 'SÍTIO', 'UNIDADE', 'RESIDENCIAL', 'FEIRA', 'ESTAÇÂO', 'RÓTULA', 'CANAL', 'FAZENDA', 'RETIRO', 'SETOR', 'RAMPA', 'ESPLANADA', 'CAMPUS', 'BLOCO', 'CENTRO', 'MÓDULO', 'ESTÁDIO', 'ESCADARIA', 'AEROPORTO', 'SERVIDÃO', 'FERROVIA', 'TREVO', 'PORTO', 'ATALHO', 'DISTRITO', 'CORREDOR', 'FONTE', 'CÓRREGO', 'CIRCULAR', 'CAIS', 'SUBIDA', 'LAGOA', 'PROLONGAMENTO', 'DESCIDA', 'PARALELA', 'ELEVADA', 'RETA', 'PONTA', 'VALA', 'BURACO', 'MARINA', 'FORTE', 'PARADA', 'LINHA', 'FRANCISCO', 'MARECHAL', 'ROD.', 'CICLOVIA']
 
@@ -286,9 +300,9 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
               scope.value.localization = response.data.cidade ? response.data.cidade : scope.value.localization;
               scope.value.neighbourhood = response.data.bairro ? response.data.bairro : scope.value.neighbourhood;
               scope.value.state = response.data.uf ? response.data.uf : scope.value.state;
-              scope.value.latitude = response.data.latitude;
-              scope.value.longitude = response.data.longitude;
-              scope.value.formalCode = response.data.ibge_cod_cidade;
+              // scope.value.latitude = response.data.latitude ? response.data.latitude : scope.value.latitude;
+              // scope.value.longitude = response.data.longitude ? response.data.longitude : scope.value.longitude;
+              scope.value.formalCode = response.data.ibge_cod_cidade ? response.data.ibge_cod_cidade : scope.value.formalCode;
               scope.value.country = 'Brasil';
             } else {
               scope.notfound = true;
