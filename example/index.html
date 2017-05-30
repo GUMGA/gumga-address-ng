@@ -52,7 +52,21 @@
       .module('app', ['ui.bootstrap','gumga.address', 'gumga.mask'])
       .config(function ($httpProvider) {
       })
-      .controller('ctrl', [function () {
+      .controller('ctrl', ['$scope', function ($scope) {
+
+        $scope.address =   {
+          "zipCode": "87707110",
+          "premisseType": "RUA",
+          "premisse": "Ébano Pereira",
+          "number": null,
+          "information": null,
+          "neighbourhood": "Jardim Panoramaaaaaaaaaaaaaaaaaaa",
+          "localization": "Paranavaí",
+          "state": "PR",
+          "country": "Brasil",
+          "formalCode": "4118402"
+        };
+
       }])
   </script>
 </body>

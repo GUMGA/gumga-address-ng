@@ -185,7 +185,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
       };
 
       if (scope.value.zipCode) {
-        scope.searchCep(scope.value.zipCode);
+        // scope.searchCep(scope.value.zipCode);
       }
     }
   };
