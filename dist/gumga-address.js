@@ -191,6 +191,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
             scope.value.localization = response.data.cidade ? response.data.cidade : scope.value.localization;
             scope.value.neighbourhood = response.data.bairro ? response.data.bairro : scope.value.neighbourhood;
             scope.value.state = response.data.uf ? response.data.uf : scope.value.state;
+            scope.value.stateCode = response.data.codigo_estado ? response.data.codigo_estado : scope.value.stateCode;
             if (attrs.coordsByCep) scope.searchCoords(scope.value);
             scope.value.formalCode = response.data.ibge_cod_cidade ? response.data.ibge_cod_cidade : scope.value.formalCode;
             scope.value.country = 'Brasil';
