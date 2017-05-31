@@ -72,15 +72,13 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
     '</div>'
     ;
   var blockComplement =
-    '<div class="row">' +
-    '		<div class="col-md-12">' +
+  '<div class="row">' +
+    '		<div class="col-md-6">' +
     '				<div class="form-group">' +
     '						<label for="Complemento">Complemento</label>' +
     '						<input type="text" ng-model="value.information" class="form-control"/>' +
     '				</div>' +
-    '		</div>' +
-    '</div>'
-    ;
+    '		</div>';
   var blockNeighbourhood =
     '<div class="row">' +
     '		<div class="col-md-12">' +
@@ -140,28 +138,23 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
     '</div>'
     ;
   var blockLatLng =
-    '<div class="row">' +
+    
     '		<div class="col-md-6">' +
-    '       <div class="form-group">' +
-    '		        <label for="Latitude{{::id}}">Latitude</label>' +
-    '		        <input type="text" ng-model="value.latitude" class="form-control" id="Latitude{{::id}}"/>' +
-    '       </div>' +
-    '		</div>' +
-    '		<div class="col-md-6">' +
-    '       <div class="form-group">' +
-    '		        <label for="Longitude{{::id}}">Longitude</label>' +
-    '		        <input type="text" ng-model="value.longitude" class="form-control" id="Longitude{{::id}}"/>' +
-    '       </div>' +
-    '		</div>' +
-    '</div>'
-    ;
-  var blockMaps =
-    '<div class="row">' +
-    '		<div class="col-md-12">' +
-    '				<button type="button" class="btn btn-default btn-block" ng-disabled="!value.localization" ng-click="openMaps(value)" target="_blank">Maps <i class="glyphicon glyphicon-globe"></i></button>' +
-    '		</div>' +
-    '</div>'
-    ;
+    '     <div class="form-group">' +
+    '		    <label for="Latitude{{::id}}">Latitude e Longitude</label>' +
+    '     <div class="input-group"> '+
+    '     <div class="input-group-btn" uib-tooltip="Visualizar mapa"> '+
+    '       <button type="button" class="btn btn-default btn-block" ng-disabled="!value.localization" ng-click="openMaps(value)" target="_blank"><i class="glyphicon glyphicon-map-marker"></i></button>'+
+    '     </div> '+  
+    '     <div class="input-group-btn" style="width:calc(50% - 24px)"> '+
+    '       <input style="border-left: 0px; border-right: 0px;" type="text" ng-model="value.latitude" class="form-control" id="Latitude{{::id}}"/> '+
+    '     </div> '+
+    '     <input style="" type="text" ng-model="value.longitude" class="form-control" id="Longitude{{::id}}"/> '+
+    '     <div class="input-group-btn"> '+
+    '        <button type="button" uib-tooltip="Buscar Coordenadas" class="btn btn-default btn-block" ng-click="searchCoords(value)"><i class="glyphicon glyphicon-globe"></i></button>' +
+    '     </div> '+  
+    '   </div></div> ';
+
   var templateEnd =
     '						</accordion-group>' +
     '				</accordion>' +
@@ -175,7 +168,8 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
       onSearchCepStart: '&?',
       onSearchCepSuccess: '&?',
       onSearchCepError: '&?',
-      apiSearchCep: '@?'
+      apiSearchCep: '@?',
+      coordsByCep: '@?'
     },
     //template: template.join('\n'),
     link: function (scope, elm, attrs, ctrl) {
@@ -223,7 +217,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
       if (attrs.streetNumber) template = template.concat(blockStreetNumber);
       if (attrs.complement) template = template.concat(blockComplement);
       if (attrs.latLng) template = template.concat(blockLatLng);
-      if (attrs.maps) template = template.concat(blockMaps);
+      // if (attrs.maps) template = template.concat(blockMaps);
 
       template = template.concat(templateEnd);
       elm.append($compile(template)(scope));
@@ -327,7 +321,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
               scope.value.localization = response.data.cidade ? response.data.cidade : scope.value.localization;
               scope.value.neighbourhood = response.data.bairro ? response.data.bairro : scope.value.neighbourhood;
               scope.value.state = response.data.uf ? response.data.uf : scope.value.state;
-              scope.searchCoords(scope.value);
+              if (attrs.coordsByCep) scope.searchCoords(scope.value);
               scope.value.formalCode = response.data.ibge_cod_cidade ? response.data.ibge_cod_cidade : scope.value.formalCode;
               scope.value.country = 'Brasil';
             } else {
