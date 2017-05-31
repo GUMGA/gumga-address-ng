@@ -44,13 +44,13 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
   var street =
     '<div class="form-group">' +
     ' <label for="Logradouro">Logradouro</label>' +
-    ' <input type="text" ng-model="value.premisse" class="form-control"/>' +
+    ' <input type="text" ng-model="value.premisse" class="form-control" ng-blur="searchCoords(value, true)"/>' +
     '</div>'
     ;
   var number =
     '<div class="form-group">' +
     '		<label for="Número">Número</label>' +
-    '		<input type="text" ng-model="value.number" class="form-control" id="numberInput{{::id}}"/>' +
+    '		<input type="text" ng-model="value.number" class="form-control" id="numberInput{{::id}}" ng-blur="searchCoords(value, true)"/>' +
     '</div>'
     ;
   var blockStreet =
@@ -119,9 +119,9 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
     ;
   var blockStateCity =
     '<div class="row">' +
-    '		<div class="{{withStateCode ? \'col-md-2\' : \'col-md-4\'}}">' + state  +
+    '		<div class="{{withStateCode ? \'col-md-2\' : \'col-md-4\'}}">' + state +
     '		</div>' +
-    '		<div class="col-md-2" ng-show="withStateCode">' + stateCode  +
+    '		<div class="col-md-2" ng-show="withStateCode">' + stateCode +
     '		</div>' +
     '		<div class="col-md-8">' + city +
     '		</div>' +
@@ -129,9 +129,9 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
     ;
   var blockStateCityIBGE =
     '<div class="row">' +
-    '		<div class="{{withStateCode ? \'col-md-2\' : \'col-md-4\'}}">' + state  +
+    '		<div class="{{withStateCode ? \'col-md-2\' : \'col-md-4\'}}">' + state +
     '		</div>' +
-    '		<div class="col-md-2" ng-show="withStateCode">' + stateCode  +
+    '		<div class="col-md-2" ng-show="withStateCode">' + stateCode +
     '		</div>' +
     '		<div class="col-md-4">' + city +
     '		</div>' +
@@ -179,8 +179,8 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
     },
     //template: template.join('\n'),
     link: function (scope, elm, attrs, ctrl) {
+
       scope.cities = [];
-      console.log(scope.value)
 
       function isEmpty(obj) {
         for (var key in obj) if (obj.hasOwnProperty(key)) {
@@ -204,7 +204,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
       attrs.latLng = forceAttr2Bool(attrs.latLng);
       attrs.maps = forceAttr2Bool(attrs.maps);
 
-      if(attrs.stateCode) scope.withStateCode = forceAttr2Bool(attrs.stateCode);
+      if (attrs.stateCode) scope.withStateCode = forceAttr2Bool(attrs.stateCode);
 
       scope.streetTypes = ['AV', 'AVENIDA', 'RUA', 'ROD.', 'BC', 'TRAVESSA', 'ALAMEDA', 'VIELA', 'CAMINHO', 'ESTRADA', 'PRAÇA', 'PASSAGEM', 'VILA', 'VIADUTO', 'RODOVIA', 'BECO', 'ACESSO', 'LARGO', 'VIA', 'CAMPO', 'MONTE', 'LADEIRA', 'CALÇADA', 'LOTEAMENTO', 'ROTATÓRIA', 'PASSEIO', 'NÚCLEO', 'PARQUE', 'ANTIGA', 'LAGO', 'BOULEVARD', 'ACAMPAMENTO', 'COMPLEXO', 'CONTORNO', 'BALÇO', 'CONJUNTO', 'MORRO', 'CONDOMÍNIO', 'TERMINAL', 'ESCADA', 'FAVELA', 'COLÔNIA', 'RECANTO', 'ALTO', 'ILHA', 'JARDIM', 'PASSARELA', 'PONTE', 'GALERIA', 'VALE', 'VEREDA', 'ENTRADA', 'BULEVAR', 'TRECHO', 'TÚNEL', 'ESTACIONAMENTO', 'QUADRA', 'BOSQUE', 'RETORNO', 'PÁTIO', 'PRAIA', 'RAMAL', 'BAIXA', 'CHÁCARA', 'SÍTIO', 'UNIDADE', 'RESIDENCIAL', 'FEIRA', 'ESTAÇÂO', 'RÓTULA', 'CANAL', 'FAZENDA', 'RETIRO', 'SETOR', 'RAMPA', 'ESPLANADA', 'CAMPUS', 'BLOCO', 'CENTRO', 'MÓDULO', 'ESTÁDIO', 'ESCADARIA', 'AEROPORTO', 'SERVIDÃO', 'FERROVIA', 'TREVO', 'PORTO', 'ATALHO', 'DISTRITO', 'CORREDOR', 'FONTE', 'CÓRREGO', 'CIRCULAR', 'CAIS', 'SUBIDA', 'LAGOA', 'PROLONGAMENTO', 'DESCIDA', 'PARALELA', 'ELEVADA', 'RETA', 'PONTA', 'VALA', 'BURACO', 'MARINA', 'FORTE', 'PARADA', 'LINHA', 'FRANCISCO', 'MARECHAL', 'ROD.', 'CICLOVIA']
 
@@ -248,17 +248,17 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
 
       scope.openModal = () => {
         var modal = $uibModal.open({
-           template: templateModal,
-           controller: GumgaAddressModalController,
-           size: 'lg',
-           resolve: {
-             factoryData: scope.factoryData,
-             apiSearchCep : scope.apiSearchCep
-           }
-         });
+          template: templateModal,
+          controller: GumgaAddressModalController,
+          size: 'lg',
+          resolve: {
+            factoryData: scope.factoryData,
+            apiSearchCep: scope.apiSearchCep
+          }
+        });
 
-         modal.result.then(function (cep) {
-          if (cep){
+        modal.result.then(function (cep) {
+          if (cep) {
             scope.searchCep(cep.cep);
             scope.value.zipCode = cep.cep;
             scope.value.codigo_ibge = cep.codigoIbgeCidade;
@@ -280,6 +280,33 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
         window.open(maps);
       };
 
+      scope.searchCoords = function (value, isSearchField) {
+        
+        if ((value.latitude && value.longitude) && isSearchField) return
+
+        var address = angular.copy(value)
+
+        for (var key in address) {
+          if (!address[key]) {
+            address[key] = ""
+          }
+        }
+
+        var formattedAddress = address.premisseType + " "
+          + address.premisse + ", "
+          + address.number + " "
+          + address.neighbourhood + " - "
+          + address.state + " " + address.country
+
+        GumgaAddressService.getGoogleCoords(formattedAddress)
+          .then(function (data) {
+            if (data.status == 200) {
+              scope.value.latitude = data.data.results[0].geometry.location.lat
+              scope.value.longitude = data.data.results[0].geometry.location.lng
+            }
+          })
+      }
+
       scope.returnLink = function (value) {
         if (!value.number) {
           value.number = '';
@@ -300,15 +327,14 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
               scope.value.localization = response.data.cidade ? response.data.cidade : scope.value.localization;
               scope.value.neighbourhood = response.data.bairro ? response.data.bairro : scope.value.neighbourhood;
               scope.value.state = response.data.uf ? response.data.uf : scope.value.state;
-              // scope.value.latitude = response.data.latitude ? response.data.latitude : scope.value.latitude;
-              // scope.value.longitude = response.data.longitude ? response.data.longitude : scope.value.longitude;
+              scope.searchCoords(scope.value);
               scope.value.formalCode = response.data.ibge_cod_cidade ? response.data.ibge_cod_cidade : scope.value.formalCode;
               scope.value.country = 'Brasil';
             } else {
               scope.notfound = true;
-              document.getElementById('input'+scope.id).focus();
-              $timeout(()=>{
-                document.getElementById('input'+scope.id).select();
+              document.getElementById('input' + scope.id).focus();
+              $timeout(() => {
+                document.getElementById('input' + scope.id).select();
               }, 10)
             }
           }, error => eventHandler.searchCepError({ $value: data }))

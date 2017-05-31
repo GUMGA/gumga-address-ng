@@ -29,6 +29,9 @@
       getLocations: function(uf, apiSearchCep){
         return $http.get(getApiSearchCep(apiSearchCep) + '/public/buscar-cidades?uf='+uf);
       },
+      getGoogleCoords: function(address){
+        return $http.get('http://maps.google.com/maps/api/geocode/json?address=' + address);
+      },
       getPremisseByUFAndCity: function(uf, city, apiSearchCep){
         return $http.get(getApiSearchCep(apiSearchCep) + '/public/buscar-logradouros?uf='+uf+'&cidade='+city);
       },
