@@ -20,8 +20,8 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
   var templateBegin = '<div class="row">' + ' <div class="col-md-12 col-sm-12 col-xs-12">' + '   <accordion>' + '	  <accordion-group is-open="false" heading="{{::title}}">';
   var blockCountryCep = '<div class="row">' + ' <div class="col-md-8">' + '	<div class="form-group">' + '   <label for="País">País</label>' + '	  <select ng-readonly="true" ng-model="value.country" class="form-control" ng-options="pais for pais in factoryData.availableCountries"></select>' + '	</div>' + '	</div>' + ' <div class="col-md-4">' + '	<div class="form-group">' + '   <label for="input{{::id}}">CEP</label>' + '   <a data-ng-click="openModal()" style="cursor: pointer;margin: 0;float: right;" class="text text-primary">Não sabe?</a> ' + '	  <div class="input-group" style="width: 100%;">' + '		<input type="text" ng-keyup="notfound=false" class="form-control" gumga-mask="99999-999" ng-model="value.zipCode" id="input{{::id}}" ng-keypress="custom($event,value.zipCode)">' + '		<span class="input-group-btn">' + '	    <button ng-show="!notfound" class="btn btn-primary" type="button" ng-click="searchCep(value.zipCode)" ng-disabled="loader{{::id}}" id="buttonSearch{{::id}}"><i class="glyphicon glyphicon-search"></i></button>' + '	    <button ng-show="notfound" uib-popover="Cep não encontrado!" popover-trigger="\'mouseenter\'" class="btn btn-danger" type="button"><i class="glyphicon glyphicon-info-sign"></i></button>' + '		</span>' + '   ' + '	  </div>' + '	</div>' + ' </div>' + '</div>';
   var streetType = '<div class="form-group">' + ' <label for="tipoLogradouro">Tipo Logradouro</label>' + ' <input type="text" ng-model="value.premisseType" typeahead-min-length="0" uib-typeahead="type for type in streetTypes | filter:$viewValue | limitTo:8" typeahead-editable="false" typeahead-show-hint="true" typeahead-min-length="0" class="form-control" typeahead-editable="false" typeahead-show-hint="true" typeahead-min-length="0">' + '</div>';
-  var street = '<div class="form-group">' + ' <label for="Logradouro">Logradouro</label>' + ' <input type="text" ng-model="value.premisse" class="form-control" ng-blur="searchCoords(value, true)"/>' + '</div>';
-  var number = '<div class="form-group">' + '		<label for="Número">Número</label>' + '		<input type="text" ng-model="value.number" class="form-control" id="numberInput{{::id}}" ng-blur="searchCoords(value, true)"/>' + '</div>';
+  var street = '<div class="form-group">' + ' <label for="Logradouro">Logradouro</label>' + ' <input type="text" ng-model="value.premisse" class="form-control" ng-blur="searchCoordsOnPremisse(value, true)"/>' + '</div>';
+  var number = '<div class="form-group">' + '		<label for="Número">Número</label>' + '		<input type="text" ng-model="value.number" class="form-control" id="numberInput{{::id}}" ng-blur="searchCoordsOnNumber(value, true)"/>' + '</div>';
   var blockStreet = '<div class="row">' + '		<div class="col-md-4">' + streetType + '		</div>' + '		<div class="col-md-8">' + street + '		</div>' + '</div>';
   var blockStreetNumber = '<div class="row">' + '		<div class="col-md-4">' + streetType + '		</div>' + '		<div class="col-md-5">' + street + '		</div>' + '		<div class="col-md-3">' + number + '		</div>' + '</div>';
   var blockComplement = '<div class="row">' + '		<div class="col-md-6">' + '				<div class="form-group">' + '						<label for="Complemento">Complemento</label>' + '						<input type="text" ng-model="value.information" class="form-control"/>' + '				</div>' + '		</div>';
@@ -45,7 +45,9 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
       onSearchCepSuccess: '&?',
       onSearchCepError: '&?',
       apiSearchCep: '@?',
-      coordsByCep: '@?'
+      coordsByCep: '@?',
+      coordsByPremisse: '@?',
+      coordsByNumber: '@?'
     },
     //template: template.join('\n'),
     link: function link(scope, elm, attrs, ctrl) {
@@ -63,6 +65,10 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
         return attr == undefined || attr == 'true' ? true : false;
       }
 
+      function forceAttr2BoolCoords(attr) {
+        return attr == 'true' ? true : false;
+      }
+
       if (isEmpty(scope.value)) scope.value = GumgaAddressService.returnFormattedObject();
 
       attrs.countryCep = forceAttr2Bool(attrs.countryCep);
@@ -74,6 +80,9 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
       attrs.stateCityIbge = forceAttr2Bool(attrs.stateCityIbge);
       attrs.latLng = forceAttr2Bool(attrs.latLng);
       attrs.maps = forceAttr2Bool(attrs.maps);
+      attrs.coordsByCep = forceAttr2BoolCoords(attrs.coordsByCep);
+      attrs.coordsByPremisse = forceAttr2BoolCoords(attrs.coordsByPremisse);
+      attrs.coordsByNumber = forceAttr2BoolCoords(attrs.coordsByNumber);
 
       if (attrs.stateCode) scope.withStateCode = forceAttr2Bool(attrs.stateCode);
 
@@ -170,6 +179,14 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
             scope.value.longitude = data.data.results[0].geometry.location.lng;
           }
         });
+      };
+
+      scope.searchCoordsOnPremisse = function (value, isSearchField) {
+        if (attrs.coordsByPremisse) scope.searchCoords(value, isSearchField);
+      };
+
+      scope.searchCoordsOnNumber = function (value, isSearchField) {
+        if (attrs.coordsByNumber) scope.searchCoords(value, isSearchField);
       };
 
       scope.returnLink = function (value) {

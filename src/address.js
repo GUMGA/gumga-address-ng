@@ -44,13 +44,13 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
   var street =
     '<div class="form-group">' +
     ' <label for="Logradouro">Logradouro</label>' +
-    ' <input type="text" ng-model="value.premisse" class="form-control" ng-blur="searchCoords(value, true)"/>' +
+    ' <input type="text" ng-model="value.premisse" class="form-control" ng-blur="searchCoordsOnPremisse(value, true)"/>' +
     '</div>'
     ;
   var number =
     '<div class="form-group">' +
     '		<label for="Número">Número</label>' +
-    '		<input type="text" ng-model="value.number" class="form-control" id="numberInput{{::id}}" ng-blur="searchCoords(value, true)"/>' +
+    '		<input type="text" ng-model="value.number" class="form-control" id="numberInput{{::id}}" ng-blur="searchCoordsOnNumber(value, true)"/>' +
     '</div>'
     ;
   var blockStreet =
@@ -169,7 +169,9 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
       onSearchCepSuccess: '&?',
       onSearchCepError: '&?',
       apiSearchCep: '@?',
-      coordsByCep: '@?'
+      coordsByCep: '@?',
+      coordsByPremisse: '@?',
+      coordsByNumber: '@?'
     },
     //template: template.join('\n'),
     link: function (scope, elm, attrs, ctrl) {
@@ -186,6 +188,10 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
         return (attr == undefined || attr == 'true') ? true : false;
       }
 
+      function forceAttr2BoolCoords(attr) {
+        return (attr == 'true') ? true : false;
+      }
+
       if (isEmpty(scope.value)) scope.value = GumgaAddressService.returnFormattedObject();
 
       attrs.countryCep = forceAttr2Bool(attrs.countryCep);
@@ -197,6 +203,9 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
       attrs.stateCityIbge = forceAttr2Bool(attrs.stateCityIbge);
       attrs.latLng = forceAttr2Bool(attrs.latLng);
       attrs.maps = forceAttr2Bool(attrs.maps);
+      attrs.coordsByCep = forceAttr2BoolCoords(attrs.coordsByCep);
+      attrs.coordsByPremisse = forceAttr2BoolCoords(attrs.coordsByPremisse);
+      attrs.coordsByNumber = forceAttr2BoolCoords(attrs.coordsByNumber);
 
       if (attrs.stateCode) scope.withStateCode = forceAttr2Bool(attrs.stateCode);
 
@@ -299,6 +308,14 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
               scope.value.longitude = data.data.results[0].geometry.location.lng
             }
           })
+      }
+
+      scope.searchCoordsOnPremisse = function (value, isSearchField) {
+        if (attrs.coordsByPremisse) scope.searchCoords(value, isSearchField)
+      }
+
+      scope.searchCoordsOnNumber = function (value, isSearchField) {
+        if (attrs.coordsByNumber) scope.searchCoords(value, isSearchField)
       }
 
       scope.returnLink = function (value) {
