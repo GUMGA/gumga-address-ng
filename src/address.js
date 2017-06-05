@@ -301,13 +301,13 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
           + address.neighbourhood + " - "
           + address.state + " " + address.country
 
-        GumgaAddressService.getGoogleCoords(formattedAddress)
-          .then(function (data) {
-            if (data.status == 200) {
-              scope.value.latitude = data.data.results[0].geometry.location.lat
-              scope.value.longitude = data.data.results[0].geometry.location.lng
-            }
-          })
+        GumgaAddressService.getGoogleCoords(formattedAddress, function(data){
+           if(data.status == 200){
+             data = {data:JSON.parse(data.data)};
+             scope.value.latitude = data.data.results[0].geometry.location.lat
+             scope.value.longitude = data.data.results[0].geometry.location.lng
+           } 
+        })
       }
 
       scope.searchCoordsOnPremisse = function (value, isSearchField) {

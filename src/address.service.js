@@ -1,7 +1,7 @@
 (function () {
   'use strict';
-  AddressService.$inject = ['$http'];
-  function AddressService($http) {
+  AddressService.$inject = ['$http', '$q'];
+  function AddressService($http,$q) {
 
     var base = 'http://45.33.100.20/services-api'
 
@@ -26,19 +26,35 @@
           country: null
         }
       },
-      getLocations: function(uf, apiSearchCep){
-        return $http.get(getApiSearchCep(apiSearchCep) + '/public/buscar-cidades?uf='+uf);
+      getLocations: function (uf, apiSearchCep) {
+        return $http.get(getApiSearchCep(apiSearchCep) + '/public/buscar-cidades?uf=' + uf);
       },
-      getGoogleCoords: function(address){
-        return $http.get('http://maps.google.com/maps/api/geocode/json?address=' + address);
+      getGoogleCoords: function (address, callback) {
+        /**
+         * Foi feito assim pelo fato da existência de headers que bloqueiam a requisição.
+         */
+
+        var httpRequest
+        httpRequest = new XMLHttpRequest()
+
+        httpRequest.onreadystatechange = loadContent
+        httpRequest.open('GET', 'http://maps.google.com/maps/api/geocode/json?address=' + address)
+        httpRequest.send()
+
+        function loadContent() {
+          if (httpRequest.readyState === XMLHttpRequest.DONE) {
+            callback({data:httpRequest.responseText, status: httpRequest.status});
+          }
+        }
+
       },
-      getPremisseByUFAndCity: function(uf, city, apiSearchCep){
-        return $http.get(getApiSearchCep(apiSearchCep) + '/public/buscar-logradouros?uf='+uf+'&cidade='+city);
+      getPremisseByUFAndCity: function (uf, city, apiSearchCep) {
+        return $http.get(getApiSearchCep(apiSearchCep) + '/public/buscar-logradouros?uf=' + uf + '&cidade=' + city);
       },
-      searchCepByUfAndCityAndPremisse: function(uf, city, premisse, apiSearchCep){
-        return $http.get(getApiSearchCep(apiSearchCep) + '/public/buscar-endereco-completo?uf='+uf+'&cidade='+city+'&logradouro='+premisse);
+      searchCepByUfAndCityAndPremisse: function (uf, city, premisse, apiSearchCep) {
+        return $http.get(getApiSearchCep(apiSearchCep) + '/public/buscar-endereco-completo?uf=' + uf + '&cidade=' + city + '&logradouro=' + premisse);
       },
-      getCep: function(cep, apiSearchCep){
+      getCep: function (cep, apiSearchCep) {
         return $http.get(getApiSearchCep(apiSearchCep) + '/public/busca-cep/' + cep)
       }
     }

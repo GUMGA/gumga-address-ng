@@ -173,8 +173,9 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
 
         var formattedAddress = address.premisseType + " " + address.premisse + ", " + address.number + " " + address.neighbourhood + " - " + address.state + " " + address.country;
 
-        GumgaAddressService.getGoogleCoords(formattedAddress).then(function (data) {
+        GumgaAddressService.getGoogleCoords(formattedAddress, function (data) {
           if (data.status == 200) {
+            data = { data: JSON.parse(data.data) };
             scope.value.latitude = data.data.results[0].geometry.location.lat;
             scope.value.longitude = data.data.results[0].geometry.location.lng;
           }
@@ -294,8 +295,8 @@ exports.default = "\n\n<div class=\"modal-header\">\n    <h3 class=\"modal-title
 (function () {
   'use strict';
 
-  AddressService.$inject = ['$http'];
-  function AddressService($http) {
+  AddressService.$inject = ['$http', '$q'];
+  function AddressService($http, $q) {
 
     var base = 'http://45.33.100.20/services-api';
 
@@ -319,8 +320,23 @@ exports.default = "\n\n<div class=\"modal-header\">\n    <h3 class=\"modal-title
       getLocations: function getLocations(uf, apiSearchCep) {
         return $http.get(getApiSearchCep(apiSearchCep) + '/public/buscar-cidades?uf=' + uf);
       },
-      getGoogleCoords: function getGoogleCoords(address) {
-        return $http.get('http://maps.google.com/maps/api/geocode/json?address=' + address);
+      getGoogleCoords: function getGoogleCoords(address, callback) {
+        /**
+         * Foi feito assim pelo fato da existência de headers que bloqueiam a requisição.
+         */
+
+        var httpRequest;
+        httpRequest = new XMLHttpRequest();
+
+        httpRequest.onreadystatechange = loadContent;
+        httpRequest.open('GET', 'http://maps.google.com/maps/api/geocode/json?address=' + address);
+        httpRequest.send();
+
+        function loadContent() {
+          if (httpRequest.readyState === XMLHttpRequest.DONE) {
+            callback({ data: httpRequest.responseText, status: httpRequest.status });
+          }
+        }
       },
       getPremisseByUFAndCity: function getPremisseByUFAndCity(uf, city, apiSearchCep) {
         return $http.get(getApiSearchCep(apiSearchCep) + '/public/buscar-logradouros?uf=' + uf + '&cidade=' + city);
