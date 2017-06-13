@@ -6,8 +6,11 @@
     var base = 'http://45.33.100.20/services-api'
 
     return {
-      everyUf: ['AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT', 'PA', 'PB', 'PE', 'PI', 'PR',
-        'RJ', 'RN', 'RR', 'RS', 'SC', 'SE', 'SP', 'TO'],
+      everyUf: ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF',
+                'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA',
+                'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS',
+                'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
+               ],
       everyLogradouro: ['Outros', 'Aeroporto', 'Alameda', 'Área', 'Avenida', 'Campo', 'Chácara', 'Colônia', 'Condomínio', 'Conjunto', 'Distrito',
         'Esplanada', 'Estação', 'Estrada', 'Favela', 'Fazenda', 'Feira', 'Jardim', 'Ladeira', 'Largo', 'Lago', 'Lagoa', 'Loteamento',
         'Núcleo', 'Parque', 'Passarela', 'Pátio', 'Praça', 'Quadra', 'Recanto', 'Residencial', 'Rodovia', 'Rua', 'Setor', 'Sítio',
