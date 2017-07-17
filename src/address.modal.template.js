@@ -10,13 +10,13 @@ export default `
       <div class="col-sm-6">
         <div class="form-group">
            <label for="UF">UF</label>
-            <select ng-model="value.state" ng-change="getCitiesByUF(value.state)" class="form-control" ng-options="uf for uf in factoryData.ufs"></select>
+            <select ng-model="value.state" ng-change="getCitiesByUF(value.state)" class="form-control gmd" ng-options="uf for uf in factoryData.ufs"></select>
         </div>
       </div>
       <div class="col-sm-6">
         <div class="form-group">
         		<label for="Localidade">Localidade</label>
-        		<input type="text" typeahead-on-select="getPremisseByUFAndCity(value.state, value.localization)" ng-disabled="!value.state || cities.length == 0" placeholder="Digite para buscar..." typeahead-min-length="0" uib-typeahead="city for city in cities | filter:$viewValue | limitTo:8" ng-model="value.localization" class="form-control"/>
+        		<input type="text" typeahead-on-select="getPremisseByUFAndCity(value.state, value.localization)" ng-disabled="!value.state || cities.length == 0" placeholder="Digite para buscar..." typeahead-min-length="0" uib-typeahead="city for city in cities | filter:$viewValue | limitTo:8" ng-model="value.localization" class="form-control gmd"/>
         </div>
       </div>
     </div>
@@ -30,7 +30,7 @@ export default `
               ng-model-options="{debounce: 1000}"
               ng-change="searchCep(value.state, value.localization, value.premisse)"
               ng-model="value.premisse"
-              class="form-control"/>
+              class="form-control gmd"/>
         </div>
       </div>
     </div>
