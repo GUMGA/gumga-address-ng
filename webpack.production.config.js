@@ -19,26 +19,26 @@ module.exports = {
         })
     ],
     module: {
-      rules: [
-        {
-          test: /\.js$/,
-          exclude: /node_modules/,
-          use: [
+        rules: [
             {
-              loader: 'babel-loader'
-            }
-          ]
-        },
-        {
-            test: /\.css$/,
-            use: ExtractTextPlugin.extract({
-                 use: 'css-loader'
-            })
-        },
-        {
-            test: /\.(jpe?g|png|gif|svg|eot|woff2|woff|ttf)$/i,
-            use: "file-loader?name=assets/[name].[ext]"
-        }]
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: [
+                    {
+                        loader: 'babel-loader'
+                    }
+                ]
+            },
+            {
+                test: /\.css$/,
+                use: ExtractTextPlugin.extract({
+                    use: 'css-loader'
+                })
+            },
+            {
+                test: /\.(jpe?g|png|gif|svg|eot|woff2|woff|ttf)$/i,
+                use: "file-loader?name=assets/[name].[ext]"
+            }]
 
     }
 };

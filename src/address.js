@@ -190,7 +190,6 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
     						<input type="text" ng-model="value.information" class="form-control"/>
     				</div>
     		</div>
-    	</div>
       `;
 
   var blockNeighbourhood = useGumgaLayout() ?

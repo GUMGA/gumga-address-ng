@@ -7,13 +7,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
     crossorigin="anonymous">
-  <link rel="stylesheet" href="https://gumga.github.io/layout/gumga-layout/gumga-layout.css">
+    <!--<link rel="stylesheet" href="gumga.css">-->
+    <link rel="stylesheet" href="https://gumga.github.io/layout/gumga-layout/gumga-layout.css">
 </head>
 
 <body data-ng-controller="ctrl">
 
   <div class="container">
-    <center><h1>Gumga Address</h1></center>
+    <h1>Gumga Address</h1>
     <div class="row">
       <div class="col-md-7 col-md-offset-2">
       <div class="panel gmd">
@@ -37,7 +38,9 @@
             </gumga-address>
         </div>
       </div>
-      <pre>{{address | json}}</pre>
+  <pre>
+  {{address | json}}
+  </pre>
       </div>
     </div>
   </div>
@@ -59,18 +62,20 @@
       .controller('ctrl', ['$scope', function ($scope) {
 
         $scope.address =   {
-          "zipCode": "86890000",
-          "stateCode": "44",
-          "premisseType": "AVENIDA",
-          "premisse": "Brasil",
-          "number": "849",
-          "information": null,
-          "neighbourhood": "jardim pérola",
-          "localization": "cambira",
-          "state": "PR",
-          "country": "Brasil",
-          "formalCode": "4118402"
-        };
+  "zipCode": "87707000",
+  "premisseType": "AVENIDA",
+  "premisse": "Heitor Alencar Furtado - de 4451/4452 a 5455/5456",
+  "number": "160",
+  "information": "ap",
+  "neighbourhood": "Jardim Farropilha",
+  "localization": "Paranavaí",
+  "state": "PR",
+  "country": "Brasil",
+  "stateCode": "41",
+  "formalCode": "4118402",
+  "latitude": -23.0885658,
+  "longitude": -52.4606878
+}
 
       }])
   </script>
