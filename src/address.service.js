@@ -1,9 +1,8 @@
 (function () {
   'use strict';
-  AddressService.$inject = ['$http', '$q'];
-  function AddressService($http,$q) {
-
-    var base = 'http://45.33.100.20/services-api'
+  AddressService.$inject = ['$http', '$q', '$gumgaAddress'];
+  function AddressService($http, $q, $gumgaAddress) {
+    var base = $gumgaAddress.getServicesAPI();
 
     return {
       everyUf: ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF',
