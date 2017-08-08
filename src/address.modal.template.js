@@ -9,13 +9,13 @@ export default `
     <div class="row">
       <div class="col-sm-6">
         <div class="form-group">
-           <label for="UF">UF</label>
+           <label for="UF">{{getTranslateByKey('state')}}</label>
             <select ng-model="value.state" ng-change="getCitiesByUF(value.state)" class="form-control gmd" ng-options="uf for uf in factoryData.ufs"></select>
         </div>
       </div>
       <div class="col-sm-6">
         <div class="form-group">
-        		<label for="Localidade">Localidade</label>
+        		<label for="Localidade">{{getTranslateByKey('localization')}}</label>
         		<input type="text" typeahead-on-select="getPremisseByUFAndCity(value.state, value.localization)" ng-disabled="!value.state || cities.length == 0" placeholder="Digite para buscar..." typeahead-min-length="0" uib-typeahead="city for city in cities | filter:$viewValue | limitTo:8" ng-model="value.localization" class="form-control gmd"/>
         </div>
       </div>
@@ -23,7 +23,7 @@ export default `
     <div class="row">
       <div class="col-sm-12">
         <div class="form-group">
-            <label for="Localidade">Logradouro</label>
+            <label for="Localidade">{{getTranslateByKey('premisse')}}</label>
             <input type="text"
               ng-disabled="!value.state || cities.length == 0"
               placeholder="Digite para buscar..."
@@ -45,9 +45,9 @@ export default `
         </label>
         <table ng-show="ceps.length > 0 && !lookingZipCode" class="table table-striped">
             <tr>
-              <th>Bairro</th>
-              <th>Logradouro</th>
-              <th>Cep</th>
+              <th>{{getTranslateByKey('neighbourhood')}}</th>
+              <th>{{getTranslateByKey('premisse')}}</th>
+              <th>{{getTranslateByKey('zipCode')}}</th>
               <th></th>
             </tr>
             <tr ng-repeat="cep in ceps | limitTo:20">
