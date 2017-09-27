@@ -58,25 +58,31 @@ angular.module('yourApp', ['gumga.address'])</code></pre>
           <div class="row">
             <div class="col-xs-6">
 
-              <gumga-address   state-code="true"
-                               value="address"
-                               name="endereco"
-                               title="Preencha um endereço"
-                               state-city="false"
-                               state-city-ibge="true"
-                               cep="false"
-                               neighbourhood="true"
-                               street="false"
-                               lat-lng="true"
-                               street-number="true"
-                               complement="true"
-                               on-search-cep-start="start()"
-                               on-search-cep-success="success()"
-                               on-search-cep-error="error()"
-                               coords-by-cep="true"
-                               coords-by-premisse="true"
-                               coords-by-number="true">
-                </gumga-address>
+              <form gumga-form>
+                <gumga-address   state-code="true"
+                                 value="address"
+                                 name="endereco"
+                                 title="Preencha um endereço"
+                                 state-city="false"
+                                 state-city-ibge="true"
+                                 cep="false"
+                                 neighbourhood="true"
+                                 street="false"
+                                 on-search-cep-start="start()"
+                                 lat-lng="true"
+                                 street-number="true"
+                                 complement="true"
+                                 required-field-message="ctrl.validRequiredAddress()"
+                                 coords-by-cep="true"
+                                 on-search-cep-success="success()"
+                                 on-search-cep-error="error()"
+                                 coords-by-premisse="true"
+                                 coords-by-number="true">
+                  </gumga-address>
+
+
+                  <gumga-errors placement="right" icon="glyphicon glyphicon-info-sign" label="Campos inválidos" title="Campos inválidos"></gumga-errors>
+              </form>
 
             </div>
             <div class="col-xs-6">
@@ -86,26 +92,29 @@ angular.module('yourApp', ['gumga.address'])</code></pre>
               </ul>
               <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="html">
-                  <pre><code  class="prettyprint">&lt;gumga-address
-  state-code="true"
-  value="address"
-  name="endereco"
-  title="Preencha um endereço"
-  state-city="false"
-  state-city-ibge="true"
-  cep="false"
-  neighbourhood="true"
-  street="false"
-  lat-lng="true"
-  street-number="true"
-  complement="true"
-  on-search-cep-start="start()"
-  on-search-cep-success="success()"
-  on-search-cep-error="error()"
-  coords-by-cep="true"
-  coords-by-premisse="true"
-  coords-by-number="true">
-&lt;/gumga-address>
+                  <pre><code  class="prettyprint">&lt;form gumga-form&gt;
+  &lt;gumga-address
+    state-code="true"
+    value="address"
+    name="endereco"
+    required-field-message="validRequiredAddress()"
+    title="Preencha um endereço"
+    state-city="false"
+    state-city-ibge="true"
+    cep="false"
+    neighbourhood="true"
+    street="false"
+    lat-lng="true"
+    street-number="true"
+    complement="true"
+    on-search-cep-start="start()"
+    on-search-cep-success="success()"
+    on-search-cep-error="error()"
+    coords-by-cep="true"
+    coords-by-premisse="true"
+    coords-by-number="true"&gt;
+  &lt;/gumga-address&gt;
+&lt;/form&gt;
 </code></pre>
                 </div>
                 <div role="tabpanel" class="tab-pane" id="js">
@@ -146,6 +155,12 @@ angular.module('yourApp', ['gumga.address'])</code></pre>
             </tr>
           </thead>
           <tbody>
+            <tr>
+              <td><strong>required-field-message</strong></td>
+              <td><code>Function</code></td>
+              <td>Não</td>
+              <td>Atributo responsáveis por configurar os atributos obrigatórios do gumga address, deve ser informado uma função que retorne um obejeto com os atributos que devem ser               <td>Atributo responsáveis por configurar os atributos obrigatórios do gumga address, deve ser informado uma função que retorne um obejeto com os atributos que devem ser obrigatorios.</td>
+            </tr>
             <tr>
               <td><strong>value</strong></td>
               <td><code>Object</code></td>
@@ -265,6 +280,7 @@ angular.module('yourApp', ['gumga.address'])</code></pre>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
     <script src="dist/gumga-address.min.js"></script>
+    <script src="https://unpkg.com/gumga-form-ng@1.2.0/dist/gumga-form.min.js"></script>
 
     <script type="text/javascript" src="app.js"></script>
     <script type="text/javascript" src="https://gumga.github.io/components/app.js"></script>

@@ -362,7 +362,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
         var fieldMessage = scope.requiredFieldMessage()[field];
         if (!fieldMessage) return;
         if (!gumgaForms) {
-          console.error('Para usar o campos obrigatorios, utilize o gumga form.');
+          console.error('Para usar o require, utilize o gumga form');
           return;
         }
         var forms = gumgaForms.filter(function (form) {

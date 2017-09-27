@@ -48,7 +48,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
                    gumga-mask="99999-999"
                    ng-model="value.zipCode"  id="input{{::id}}"
                    required>
-            <label for="input{{::id}}" class="control-label">{{getTranslateByKey('zipCode')}}</label>
+            <label for="input{{::id}}" class="control-label">{{getTranslateByKey('zipCode')}} <span ng-show="checkFieldRequired('zipCode')" class="text text-danger">*</span></label>
           </gmd-input>
           <span class="input-group-btn">
             <button ng-show="!notfound" style="margin-bottom: 22px;" class="btn btn-primary gmd" type="button" ng-click="searchCep(value.zipCode)" ng-disabled="loader{{::id}}" id="buttonSearch{{::id}}"><i class="glyphicon glyphicon-search"></i></button>
@@ -63,7 +63,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
     `<div class="row">
      <div class="col-md-8">
     	<div class="form-group">
-       <label for="country">{{getTranslateByKey('country')}}</label>
+       <label for="country">{{getTranslateByKey('country')}} <span ng-show="checkFieldRequired('country')" class="text text-danger">*</span></label>
     	  <select ng-readonly="true" ng-model="value.country" class="form-control" ng-options="pais for pais in factoryData.availableCountries"></select>
     	</div>
     	</div>
@@ -100,7 +100,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
     :
     `
       <div class="form-group">
-       <label for="tipoLogradouro">{{getTranslateByKey('premisseType')}}</label>
+       <label for="tipoLogradouro">{{getTranslateByKey('premisseType')}} <span ng-show="checkFieldRequired('premisseType')" class="text text-danger">*</span></label>
        <input type="text" ng-model="value.premisseType" typeahead-min-length="0" uib-typeahead="type for type in streetTypes | filter:$viewValue | limitTo:8" typeahead-editable="false" typeahead-show-hint="true" typeahead-min-length="0" class="form-control" typeahead-editable="false" typeahead-show-hint="true" typeahead-min-length="0">
       </div>
     `;
@@ -114,14 +114,14 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
                 ng-model="value.premisse"
                 required>
          <span class="bar"></span>
-         <label class="control-label">{{getTranslateByKey('premisse')}}</label>
+         <label class="control-label">{{getTranslateByKey('premisse')}} <span ng-show="checkFieldRequired('premisse')" class="text text-danger">*</span></label>
        </gmd-input>
       </div>
     `
     :
     `
       <div class="form-group">
-       <label for="premisse">{{getTranslateByKey('premisse')}}</label>
+       <label for="premisse">{{getTranslateByKey('premisse')}} <span ng-show="checkFieldRequired('premisse')" class="text text-danger">*</span></label>
        <input type="text" ng-model="value.premisse" class="form-control" ng-blur="searchCoordsOnPremisse(value, true)"/>
       </div>
     `
@@ -136,14 +136,14 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
               ng-model="value.number"
               required>
        <span class="bar"></span>
-       <label class="control-label">{{getTranslateByKey('number')}}</label>
+       <label class="control-label">{{getTranslateByKey('number')}} <span ng-show="checkFieldRequired('number')" class="text text-danger">*</span></label>
      </gmd-input>
     </div>
     `
     :
     `
     <div class="form-group">
-    		<label for="number">{{getTranslateByKey('number')}}</label>
+    		<label for="number">{{getTranslateByKey('number')}} <span ng-show="checkFieldRequired('number')" class="text text-danger">*</span></label>
     		<input type="text" ng-model="value.number" class="form-control" id="numberInput{{::id}}" ng-blur="searchCoordsOnNumber(value, true)"/>
     </div>
     `;
@@ -177,7 +177,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
                          ng-model="value.information"
                          required>
                   <span class="bar"></span>
-                  <label class="control-label">{{getTranslateByKey('information')}}</label>
+                  <label class="control-label">{{getTranslateByKey('information')}} <span ng-show="checkFieldRequired('information')" class="text text-danger">*</span></label>
                 </gmd-input>
     				</div>
     		</div>
@@ -187,7 +187,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
      <div class="row">
     		<div class="col-md-6">
     				<div class="form-group">
-    						<label for="information">{{getTranslateByKey('information')}}</label>
+    						<label for="information">{{getTranslateByKey('information')}} <span ng-show="checkFieldRequired('information')" class="text text-danger">*</span></label>
     						<input type="text" ng-model="value.information" class="form-control"/>
     				</div>
     		</div>
@@ -204,7 +204,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
                            ng-model="value.neighbourhood" id="name"
                            required>
                     <span class="bar"></span>
-                    <label for="name" class="control-label">{{getTranslateByKey('neighbourhood')}}</label>
+                    <label for="name" class="control-label">{{getTranslateByKey('neighbourhood')}} <span ng-show="checkFieldRequired('neighbourhood')" class="text text-danger">*</span></label>
                   </gmd-input>
               </div>
           </div>
@@ -215,7 +215,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
       <div class="row">
       		<div class="col-md-12">
       				<div class="form-group">
-      						<label for="neighbourhood">{{getTranslateByKey('neighbourhood')}}</label>
+      						<label for="neighbourhood">{{getTranslateByKey('neighbourhood')}} <span ng-show="checkFieldRequired('neighbourhood')" class="text text-danger">*</span></label>
       						<input type="text" ng-model="value.neighbourhood" class="form-control"/>
       				</div>
       		</div>
@@ -252,14 +252,14 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
           ng-model="value.stateCode"
           required>
         <span class="bar"></span>
-        <label for="stateCode">{{getTranslateByKey('stateCode')}}</label>
+        <label for="stateCode">{{getTranslateByKey('stateCode')}} <span ng-show="checkFieldRequired('stateCode')" class="text text-danger">*</span></label>
       </gmd-input>
 		</div>
     `
     :
     `
     <div class="form-group">
-				<label for="stateCode">{{getTranslateByKey('stateCode')}}</label>
+				<label for="stateCode">{{getTranslateByKey('stateCode')}} <span ng-show="checkFieldRequired('stateCode')" class="text text-danger">*</span></label>
 				<input type="text" ng-model="value.stateCode" class="form-control"/>
 		</div>
     `;
@@ -273,14 +273,14 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
           ng-model="value.localization"
           required>
         <span class="bar"></span>
-        <label class="control-label">{{getTranslateByKey('localization')}}</label>
+        <label class="control-label">{{getTranslateByKey('localization')}} <span ng-show="checkFieldRequired('localization')" class="text text-danger">*</span></label>
       </gmd-input>
     </div>
     `
     :
     `
     <div class="form-group">
-    		<label for="localization">{{getTranslateByKey('localization')}}</label>
+    		<label for="localization">{{getTranslateByKey('localization')}} <span ng-show="checkFieldRequired('localization')" class="text text-danger">*</span></label>
     		<input type="text" ng-model="value.localization" class="form-control"/>
     </div>
     `;
@@ -294,12 +294,12 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
              ng-model="value.formalCode"
              required>
            <span class="bar"></span>
-           <label for="CodIBGE{{::id}}" class="control-label">{{getTranslateByKey('formalCode')}}</label>
+           <label for="CodIBGE{{::id}}" class="control-label">{{getTranslateByKey('formalCode')}} <span ng-show="checkFieldRequired('formalCode')" class="text text-danger">*</span></label>
          </gmd-input>
      </div> `
     :
     `<div class="form-group">
-    		<label for="CodIBGE{{::id}}">{{getTranslateByKey('formalCode')}}</label>
+    		<label for="CodIBGE{{::id}}">{{getTranslateByKey('formalCode')}} <span ng-show="checkFieldRequired('formalCode')" class="text text-danger">*</span></label>
     		<input type="text" ng-model="value.formalCode" class="form-control" id="CodIBGE{{::id}}"/>
     </div> `;
 
@@ -356,7 +356,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
      <div class="input-group-btn" style="width:calc(50% - 24px)">
        <input style="border-left: 0px; border-right: 0px;" type="text" ng-model="value.latitude" class="form-control" id="Latitude{{::id}}"/>
      </div>
-     <input style="" type="text" ng-model="value.longitude" class="form-control" id="Longitude{{::id}}"/>
+     <input style="" type="text" ng-model="value.longitude" class="form-control" id="Longitude{{:: className=""}}"/>
      <div class="input-group-btn">
         <button type="button" uib-tooltip="Buscar Coordenadas" class="btn btn-default btn-block" ng-click="searchCoords(value)"><i class="glyphicon glyphicon-globe"></i></button>
      </div>
@@ -376,6 +376,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
       onSearchCepStart: '&?',
       onSearchCepSuccess: '&?',
       onSearchCepError: '&?',
+      requiredFieldMessage: '&?',
       apiSearchCep: '@?',
       coordsByCep: '@?',
       coordsByPremisse: '@?',
@@ -383,10 +384,45 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
     },
     //template: template.join('\n'),
     link: function (scope, elm, attrs, ctrl) {
+      scope.addressID = guid();
 
       scope.cities = [];
 
       scope.getTranslateByKey = key => $gumgaAddress.getTranslation()[key];
+
+      scope.checkFieldRequired = field => {
+        if(!scope.requiredFieldMessage) return;
+        let fieldMessage = scope.requiredFieldMessage()[field];
+        if(!fieldMessage) return;
+        if(!gumgaForms){
+          console.error('Para usar o campos obrigatorios, utilize o gumga form.');
+          return;
+        }
+        let forms = gumgaForms.filter(form => form.element[0] == angular.element('form[gumga-form]')[0]);
+        if(forms.length == 0) return;
+        let scopeForm = forms[0].scope;
+        scopeForm.updateErrorsModel();
+        if(fieldMessage
+          && (scope.value[field] == null
+          || scope.value[field] == undefined
+          || (scope.value[field]+'').trim() == '')){
+            scopeForm.updateFormErrors(scope.addressID + '-' + field, 'gumga-address-reqiuired', false, fieldMessage);
+            scopeForm.updateErrorsModel();
+            return true;
+        }
+        scopeForm.deleteErrosByInputName(scope.addressID + '-' + field);
+        scopeForm.updateErrorsModel();
+      }
+
+      function guid() {
+        function s4() {
+          return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+        }
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+          s4() + '-' + s4() + s4() + s4();
+      }
 
       function isEmpty(obj) {
         for (var key in obj) if (obj.hasOwnProperty(key)) {
@@ -394,6 +430,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
         }
         return true;
       }
+
       function forceAttr2Bool(attr) {
         return (attr == undefined || attr == 'true') ? true : false;
       }
@@ -447,13 +484,14 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
       scope.id = attrs.name;
       scope['loader' + scope.id] = false;
       scope['maps' + scope.id] = false;
+
       scope.factoryData = {
         ufs: GumgaAddressService.everyUf,
         logs: GumgaAddressService.everyLogradouro,
         availableCountries: GumgaAddressService.availableCountries
       };
-      scope.value.country = scope.factoryData.availableCountries[0]
 
+      scope.value.country = scope.factoryData.availableCountries[0];
 
       var eventHandler = {
         searchCepStart: (attrs.onSearchCepStart ? scope.onSearchCepStart : angular.noop),
@@ -554,6 +592,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
               if (attrs.coordsByCep) scope.searchCoords(scope.value);
               scope.value.formalCode = response.data.ibge_cod_cidade ? response.data.ibge_cod_cidade : scope.value.formalCode;
               scope.value.country = 'Brasil';
+              delete scope.notfound;
             } else {
               scope.notfound = true;
               document.getElementById('input' + scope.id).focus();

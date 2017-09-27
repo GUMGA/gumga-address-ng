@@ -1,5 +1,6 @@
-angular.module('app', ['gumga.address', 'ui.bootstrap'])
+angular.module('app', ['gumga.address', 'ui.bootstrap', 'gumga.form'])
   .config(['$gumgaAddressProvider', function($gumgaAddressProvider){
+
       $gumgaAddressProvider.setTranslation({
         country: 'Pais',
         zipCode: 'CEP',
@@ -14,10 +15,18 @@ angular.module('app', ['gumga.address', 'ui.bootstrap'])
         formalCode: 'Cód. IBGE',
         coordinates: 'Latitude e Longitude'
       })
+
   }])
   .controller('Ctrl', function ($http) {
     var ctrl = this;
 
+
+    ctrl.validRequiredAddress = function(){
+      return {
+        "premisse": "O campo localidade é obrigatorio",
+        "localization": "O campo logradouro é obrigatorio"
+      }
+    }
 
 
   })
