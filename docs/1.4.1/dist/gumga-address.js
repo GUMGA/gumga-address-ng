@@ -362,7 +362,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
         var fieldMessage = scope.requiredFieldMessage()[field];
         if (!fieldMessage) return;
         if (!gumgaForms) {
-          console.error('Para usar o campos obrigatorios, utilize o gumga form.');
+          console.error('Para usar o require, utilize o gumga form');
           return;
         }
         var forms = gumgaForms.filter(function (form) {
@@ -372,7 +372,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
         var scopeForm = forms[0].scope;
         scopeForm.updateErrorsModel();
         if (fieldMessage && (scope.value[field] == null || scope.value[field] == undefined || (scope.value[field] + '').trim() == '')) {
-          scopeForm.updateFormErrors(field, '-gumga-address-required', false, fieldMessage);
+          scopeForm.updateFormErrors(scope.addressID + '-' + field, 'gumga-address-reqiuired', false, fieldMessage);
           scopeForm.updateErrorsModel();
           return true;
         }

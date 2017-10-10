@@ -40,8 +40,8 @@
                            on-search-cep-error="error()">
             </gumga-address>
 
-            <gumga-errors placement="right" icon="glyphicon glyphicon-info-sign" label="Campos inválidos" title="Campos inválidos"></gumga-errors>
-
+            <gumga-errors errors="dsadas" placement="right" icon="glyphicon glyphicon-info-sign" label="Campos inválidos" title="Campos inválidos"></gumga-errors>
+            {{dsadas}}
           </form>
 
         </div>
@@ -60,11 +60,13 @@
   <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
   <script src="dist/gumga-address.js"></script>
   <script src="https://gumga.github.io/layout/gumga-layout/gumga-layout.js"></script>
-  <script src="https://unpkg.com/gumga-form-ng@1.2.0/dist/gumga-form.min.js"></script>
+  <script src="node_modules/gumga-form-ng/dist/gumga-form.js"></script>
   <script>
     angular
       .module('app', ['ui.bootstrap','gumga.address', 'gumga.mask', 'gumga.layout', 'gumga.form'])
       .config(function ($httpProvider, $gumgaAddressProvider) {
+          
+
           $gumgaAddressProvider.setTranslation({
             country: 'Pais',
             zipCode: 'CEP',
@@ -81,6 +83,8 @@
           })
       })
       .controller('ctrl', ['$scope', function ($scope) {
+        
+        $scope.address = [];
 
         $scope.address =   {
           "zipCode": "87707000",
