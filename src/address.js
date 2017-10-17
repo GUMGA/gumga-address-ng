@@ -406,11 +406,11 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
           && (scope.value[field] == null
           || scope.value[field] == undefined
           || (scope.value[field]+'').trim() == '')){
-            scopeForm.updateFormErrors(field, '-gumga-address-required', false, fieldMessage);
+            scopeForm.updateFormErrors(scope.addressID+'-'+field, '-gumga-address-required', false, fieldMessage);
             scopeForm.updateErrorsModel();
             return true;
         }
-        scopeForm.deleteErrosByInputName(scope.addressID + '-' + field);
+        scopeForm.deleteErrosByInputName(scope.addressID+'-'+field);
         scopeForm.updateErrorsModel();
       }
 

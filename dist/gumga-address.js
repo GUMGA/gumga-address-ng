@@ -372,7 +372,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
         var scopeForm = forms[0].scope;
         scopeForm.updateErrorsModel();
         if (fieldMessage && (scope.value[field] == null || scope.value[field] == undefined || (scope.value[field] + '').trim() == '')) {
-          scopeForm.updateFormErrors(field, '-gumga-address-required', false, fieldMessage);
+          scopeForm.updateFormErrors(scope.addressID + '-' + field, '-gumga-address-required', false, fieldMessage);
           scopeForm.updateErrorsModel();
           return true;
         }
