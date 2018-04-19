@@ -16,7 +16,7 @@
   <div class="container">
     <div class="row">
       <div class="col-md-7 col-md-offset-2">
-      <h1>Gumga Address</h1>
+      <!-- <h1>Gumga Address</h1> --> <br><br><br>
       <div class="panel gmd">
         <div class="panel-body">
 
@@ -65,8 +65,8 @@
     angular
       .module('app', ['ui.bootstrap','gumga.address', 'gumga.mask', 'gumga.layout', 'gumga.form'])
       .config(function ($httpProvider, $gumgaAddressProvider) {
+          $gumgaAddressProvider.setGoogleKey('AIzaSyBxoy9Str65OahPkos1crgOa7zR0ZVYSbU');
           
-
           $gumgaAddressProvider.setTranslation({
             country: 'Pais',
             zipCode: 'CEP',

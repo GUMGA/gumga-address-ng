@@ -148,7 +148,6 @@ function AddressProvider() {
 
   var defaultConfiguration = {
     servicesAPI: 'http://45.33.100.20/services-api',
-    googleKey: '',
     translation: {
       country: 'Pais',
       zipCode: 'CEP',
@@ -163,14 +162,6 @@ function AddressProvider() {
       formalCode: 'Cód. IBGE',
       coordinates: 'Latitude e Longitude'
     }
-  };
-
-  var setGoogleKey = function setGoogleKey(key) {
-    return defaultConfiguration['googleKey'] = key;
-  };
-
-  var getGoogleKey = function getGoogleKey() {
-    return defaultConfiguration['googleKey'];
   };
 
   var setServicesAPI = function setServicesAPI(apiLocation) {
@@ -192,16 +183,12 @@ function AddressProvider() {
   };
 
   return {
-    setGoogleKey: setGoogleKey,
-    getGoogleKey: getGoogleKey,
     setServicesAPI: setServicesAPI,
     getServicesAPI: getServicesAPI,
     setTranslation: setTranslation,
     getTranslation: getTranslation,
     $get: function $get() {
       return {
-        setGoogleKey: setGoogleKey,
-        getGoogleKey: getGoogleKey,
         setServicesAPI: setServicesAPI,
         getServicesAPI: getServicesAPI,
         setTranslation: setTranslation,
@@ -256,9 +243,9 @@ exports.default = AddressProvider;
 
         var httpRequest;
         httpRequest = new XMLHttpRequest();
+
         httpRequest.onreadystatechange = loadContent;
-        var key = $gumgaAddress.getGoogleKey();
-        httpRequest.open('GET', 'https://maps.google.com/maps/api/geocode/json?address=' + address + (key ? '&key=' + key : ''));
+        httpRequest.open('GET', 'http://maps.google.com/maps/api/geocode/json?address=' + address);
         httpRequest.send();
 
         function loadContent() {
@@ -375,7 +362,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
         var fieldMessage = scope.requiredFieldMessage()[field];
         if (!fieldMessage) return;
         if (!gumgaForms) {
-          console.error('Para usar o campos obrigatorios, utilize o gumga form.');
+          console.error('Para usar o require, utilize o gumga form');
           return;
         }
         var forms = gumgaForms.filter(function (form) {
@@ -385,7 +372,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
         var scopeForm = forms[0].scope;
         scopeForm.updateErrorsModel();
         if (fieldMessage && (scope.value[field] == null || scope.value[field] == undefined || (scope.value[field] + '').trim() == '')) {
-          scopeForm.updateFormErrors(scope.addressID + '-' + field, '-gumga-address-required', false, fieldMessage);
+          scopeForm.updateFormErrors(scope.addressID + '-' + field, 'gumga-address-reqiuired', false, fieldMessage);
           scopeForm.updateErrorsModel();
           return true;
         }
@@ -527,10 +514,8 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
         GumgaAddressService.getGoogleCoords(formattedAddress, function (data) {
           if (data.status == 200) {
             data = { data: JSON.parse(data.data) };
-            $timeout(function () {
-              scope.value.latitude = data.data.results[0].geometry.location.lat;
-              scope.value.longitude = data.data.results[0].geometry.location.lng;
-            });
+            scope.value.latitude = data.data.results[0].geometry.location.lat;
+            scope.value.longitude = data.data.results[0].geometry.location.lng;
           }
         });
       };

@@ -2,6 +2,7 @@ function AddressProvider(){
 
   let defaultConfiguration = {
     servicesAPI : 'http://45.33.100.20/services-api',
+    googleKey: '',
     translation : {
       country: 'Pais',
       zipCode: 'CEP',
@@ -18,6 +19,10 @@ function AddressProvider(){
     }
   }
 
+  const setGoogleKey = (key) => defaultConfiguration['googleKey'] = key;
+
+  const getGoogleKey = () => defaultConfiguration['googleKey'];
+
   const setServicesAPI = (apiLocation) => defaultConfiguration['servicesAPI'] = apiLocation;
 
   const getServicesAPI = () => defaultConfiguration['servicesAPI'];
@@ -28,12 +33,16 @@ function AddressProvider(){
   const getTranslation = () => defaultConfiguration['translation'];
 
   return {
+    setGoogleKey: setGoogleKey,
+    getGoogleKey: getGoogleKey,
     setServicesAPI: setServicesAPI,
     getServicesAPI: getServicesAPI,
     setTranslation: setTranslation,
     getTranslation: getTranslation,
     $get: function(){
       return {
+        setGoogleKey: setGoogleKey,
+        getGoogleKey: getGoogleKey,
         setServicesAPI: setServicesAPI,
         getServicesAPI: getServicesAPI,
         setTranslation: setTranslation,

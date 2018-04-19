@@ -7,7 +7,7 @@ import AddressProvider from './address.provider.js'
 AddressDirective.$inject = ['GumgaAddressService', '$http', '$compile', '$uibModal', '$timeout', '$injector', '$gumgaAddress'];
 function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $timeout, $injector, $gumgaAddress) {
 
-  function useGumgaLayout(){
+  function useGumgaLayout() {
     try {
       return !!angular.module('gumga.layout');
     } catch (error) {
@@ -104,7 +104,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
        <input type="text" ng-model="value.premisseType" typeahead-min-length="0" uib-typeahead="type for type in streetTypes | filter:$viewValue | limitTo:8" typeahead-editable="false" typeahead-show-hint="true" typeahead-min-length="0" class="form-control" typeahead-editable="false" typeahead-show-hint="true" typeahead-min-length="0">
       </div>
     `;
-  var street =  useGumgaLayout() ?
+  var street = useGumgaLayout() ?
     `
       <div class="form-group">
         <gmd-input>
@@ -244,7 +244,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
     </div>`;
 
   var stateCode = useGumgaLayout() ?
-		`
+    `
     <div class="form-group">
       <gmd-input>
         <input type="text"
@@ -286,7 +286,7 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
     `;
 
   var codIBGE = useGumgaLayout() ?
-     `<div class="form-group">
+    `<div class="form-group">
          <gmd-input>
            <input type="text"
              class="form-control gmd"
@@ -391,26 +391,26 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
       scope.getTranslateByKey = key => $gumgaAddress.getTranslation()[key];
 
       scope.checkFieldRequired = field => {
-        if(!scope.requiredFieldMessage) return;
+        if (!scope.requiredFieldMessage) return;
         let fieldMessage = scope.requiredFieldMessage()[field];
-        if(!fieldMessage) return;
-        if(!gumgaForms){
+        if (!fieldMessage) return;
+        if (!gumgaForms) {
           console.error('Para usar o campos obrigatorios, utilize o gumga form.');
           return;
         }
         let forms = gumgaForms.filter(form => form.element[0] == angular.element('form[gumga-form]')[0]);
-        if(forms.length == 0) return;
+        if (forms.length == 0) return;
         let scopeForm = forms[0].scope;
         scopeForm.updateErrorsModel();
-        if(fieldMessage
+        if (fieldMessage
           && (scope.value[field] == null
-          || scope.value[field] == undefined
-          || (scope.value[field]+'').trim() == '')){
-            scopeForm.updateFormErrors(scope.addressID+'-'+field, '-gumga-address-required', false, fieldMessage);
-            scopeForm.updateErrorsModel();
-            return true;
+            || scope.value[field] == undefined
+            || (scope.value[field] + '').trim() == '')) {
+          scopeForm.updateFormErrors(scope.addressID + '-' + field, '-gumga-address-required', false, fieldMessage);
+          scopeForm.updateErrorsModel();
+          return true;
         }
-        scopeForm.deleteErrosByInputName(scope.addressID+'-'+field);
+        scopeForm.deleteErrosByInputName(scope.addressID + '-' + field);
         scopeForm.updateErrorsModel();
       }
 
@@ -551,12 +551,14 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
           + address.neighbourhood + " - "
           + address.state + " " + address.country
 
-        GumgaAddressService.getGoogleCoords(formattedAddress, function(data){
-           if(data.status == 200){
-             data = {data:JSON.parse(data.data)};
-             scope.value.latitude = data.data.results[0].geometry.location.lat
-             scope.value.longitude = data.data.results[0].geometry.location.lng
-           }
+        GumgaAddressService.getGoogleCoords(formattedAddress, function (data) {
+          if (data.status == 200) {
+            data = { data: JSON.parse(data.data) };
+            $timeout(() => {
+              scope.value.latitude = data.data.results[0].geometry.location.lat
+              scope.value.longitude = data.data.results[0].geometry.location.lng
+            });
+          }
         })
       }
 
@@ -604,36 +606,36 @@ function AddressDirective(GumgaAddressService, $http, $compile, $uibModal, $time
       };
 
       var stateCodes = {
-          'AC':12,
-          'AL':27,
-          'AP':16,
-          'AM':13,
-          'BA':29,
-          'CE':23,
-          'DF':53,
-          'ES':32,
-          'GO':52,
-          'MA':21,
-          'MT':51,
-          'MS':50,
-          'MG':31,
-          'PA':15,
-          'PB':25,
-          'PR':41,
-          'PE':26,
-          'PI':22,
-          'RJ':33,
-          'RN':24,
-          'RS':43,
-          'RO':11,
-          'RR':14,
-          'SC':42,
-          'SP':35,
-          'SE':28,
-          'TO':17
+        'AC': 12,
+        'AL': 27,
+        'AP': 16,
+        'AM': 13,
+        'BA': 29,
+        'CE': 23,
+        'DF': 53,
+        'ES': 32,
+        'GO': 52,
+        'MA': 21,
+        'MT': 51,
+        'MS': 50,
+        'MG': 31,
+        'PA': 15,
+        'PB': 25,
+        'PR': 41,
+        'PE': 26,
+        'PI': 22,
+        'RJ': 33,
+        'RN': 24,
+        'RS': 43,
+        'RO': 11,
+        'RR': 14,
+        'SC': 42,
+        'SP': 35,
+        'SE': 28,
+        'TO': 17
       }
-      scope.setStateCode = function(uf) {
-          scope.value.stateCode = stateCodes[uf];
+      scope.setStateCode = function (uf) {
+        scope.value.stateCode = stateCodes[uf];
       }
 
       if (scope.value.zipCode) {

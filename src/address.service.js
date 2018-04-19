@@ -38,9 +38,9 @@
 
         var httpRequest
         httpRequest = new XMLHttpRequest()
-
-        httpRequest.onreadystatechange = loadContent
-        httpRequest.open('GET', 'http://maps.google.com/maps/api/geocode/json?address=' + address)
+        httpRequest.onreadystatechange = loadContent;
+        const key = $gumgaAddress.getGoogleKey();
+        httpRequest.open('GET', `https://maps.google.com/maps/api/geocode/json?address=${address}${ key ? '&key=' + key : ''}`)
         httpRequest.send()
 
         function loadContent() {
